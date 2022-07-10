@@ -8,22 +8,16 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.reusablecomposables.AppButton
 import com.example.moviesapp.ui.composables.reusablecomposables.AppButtonType
-import com.example.moviesapp.ui.composables.reusablecomposables.AppContentColumn
 import com.example.moviesapp.ui.composables.reusablecomposables.AppDefaultHeader
-import com.example.moviesapp.ui.constants.ROUTE_LOGIN_GRAPH
-import com.example.moviesapp.ui.constants.ROUTE_LOGIN_SCREEN
-import com.example.moviesapp.ui.constants.ROUTE_WELCOME_SCREEN
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -68,8 +62,8 @@ fun WelcomeScreenContent(
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
-    isDarkMode: Boolean
+    isDarkMode: Boolean,
+    onButtonClick: () -> Unit
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         WelcomeScreenBackground(isDarkMode = isDarkMode)
@@ -77,14 +71,9 @@ fun WelcomeScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(horizontal = 12.dp)
-        ) {
-            navController.navigate(route = ROUTE_LOGIN_GRAPH) {
-                popUpTo(route = ROUTE_WELCOME_SCREEN){
-                    inclusive = true
-                }
-            }
-        }
+                .padding(horizontal = 12.dp),
+            onButtonClick = onButtonClick
+        )
     }
 
 }
@@ -100,7 +89,6 @@ fun PreviewWelcomeScreen() {
     MoviesAppTheme {
         WelcomeScreen(
             isDarkMode = isSystemInDarkTheme(),
-            navController = rememberNavController()
-        )
+        ){}
     }
 }

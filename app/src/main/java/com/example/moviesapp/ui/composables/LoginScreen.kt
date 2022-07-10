@@ -1,6 +1,7 @@
 package com.example.moviesapp.ui.composables
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -86,20 +87,18 @@ fun LoginButtons(onLoginCLicked: () -> Unit, onGoogleLoginCLicked: () -> Unit) {
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    onForgotPasswordClick: (email:String) -> Unit,
+    onSignUpClick: () -> Unit,
 ) {
-    AppSignUpLoginScaffold(
+    AppLoginFlowScaffold(
         headerTitle = stringResource(id = R.string.login_header_text),
         headerSubtitle = stringResource(id = R.string.login_subtitle_text),
-        isNavHome = true,
         content = {
             LoginTextFields(
                 email = "",
                 password = "",
                 onValueChange = { _, _ -> },
-                onForgotPasswordClick = {
-                    navController.navigate(route = "${ROUTE_FORGOT_PASSWORD_SCREEN}/domain@hostname.com")
-                })
+                onForgotPasswordClick = { onForgotPasswordClick("domain@hostname.com") })
 
             LoginButtons(onLoginCLicked = {}, onGoogleLoginCLicked = {})
 
@@ -107,9 +106,7 @@ fun LoginScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.login_footer_text),
                 link = stringResource(R.string.login_footer_link_text),
-                onLinkCLick = {
-                    navController.navigate(route = ROUTE_SIGN_UP_SCREEN)
-                })
+                onLinkCLick = onSignUpClick)
         }
     )
 }
@@ -123,7 +120,8 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     MoviesAppTheme {
         LoginScreen(
-            navController = rememberNavController()
+            onForgotPasswordClick = {},
+            onSignUpClick = {}
         )
     }
 }

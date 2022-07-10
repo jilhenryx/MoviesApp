@@ -10,7 +10,6 @@ import androidx.core.content.edit
 import androidx.core.view.WindowCompat
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.App
-import com.example.moviesapp.ui.composables.SystemUiTheme
 import com.example.moviesapp.ui.constants.PACKAGE_NAME
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
@@ -20,7 +19,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_MoviesApp)
-
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         //Check if user is launching the app for the first time
@@ -32,12 +30,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             MoviesAppTheme {
                 //SystemUiTheme()
-                Surface {
                     App(
                         isFirstLaunch = firstLaunch,
                         isDarkMode = isSystemInDarkTheme()
                     )
-                }
 
             }
         }

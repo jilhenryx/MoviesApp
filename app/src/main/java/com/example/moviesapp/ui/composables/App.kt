@@ -1,71 +1,149 @@
 package com.example.moviesapp.ui.composables
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
+import androidx.compose.runtime.setValue
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.moviesapp.R
+import com.example.moviesapp.ui.composables.reusablecomposables.AppScaffold
 import com.example.moviesapp.ui.constants.*
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-fun NavGraphBuilder.loginGraph(navController: NavController) {
+fun NavGraphBuilder.loginGraph(
+    navController: NavController,
+    setIsNavHomeIndicator: (isHomeDest: Boolean) -> Unit
+) {
     navigation(
         startDestination = ROUTE_LOGIN_SCREEN,
         route = ROUTE_LOGIN_GRAPH,
     ) {
         composable(route = ROUTE_LOGIN_SCREEN) {
-            LoginScreen(navController)
+            LoginScreen(
+                onSignUpClick = {
+                    navController.navigate(route = ROUTE_SIGN_UP_SCREEN)
+                },
+                onForgotPasswordClick = { email ->
+                    navController.navigate(route = "$ROUTE_FORGOT_PASSWORD_SCREEN/$email")
+                }
+            )
+            setIsNavHomeIndicator(true)
         }
         composable(route = ROUTE_SIGN_UP_SCREEN) {
-            SignUpScreen(navController)
-        }
-        composable(route = "$ROUTE_CONFIRM_EMAIL_SCREEN/{email}") { backStackEntry ->
-            val email = backStackEntry.arguments?.getString("email") ?: ""
-            ConfirmEmailScreen(navController, email)
+            SignUpScreen(
+                onLoginClick = {
+                    navController.navigate(route = ROUTE_LOGIN_SCREEN) {
+                        popUpTo(route = ROUTE_LOGIN_SCREEN) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onSignUp = { email ->
+                    val titleId = R.string.confirm_email_header_text
+                    val subtitleId = R.string.confirm_email_header_subtitle_text
+                    navController.navigate(
+                        route = "$ROUTE_CHECK_EMAIL_SCREEN/$email?titleStringId=$titleId&subtitleStringId=$subtitleId"
+                    )
+                }
+            )
+            setIsNavHomeIndicator(false)
         }
         composable(route = "$ROUTE_FORGOT_PASSWORD_SCREEN/{email}") { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email") ?: ""
-            ForgotPasswordScreen(navController, email)
+            ForgotPasswordScreen(
+                email,
+                onContinueClick = { emailAddress ->
+                    navController.navigate(route = "$ROUTE_CHECK_EMAIL_SCREEN/$emailAddress") {
+                        popUpTo(route = ROUTE_LOGIN_SCREEN)
+                    }
+                }
+            )
+            setIsNavHomeIndicator(false)
         }
-        composable(route = "$ROUTE_CHECK_EMAIL_SCREEN/{email}") { backStackEntry ->
+        composable(
+            route = "$ROUTE_CHECK_EMAIL_SCREEN/{email}?titleStringId={titleStringId}&subtitleStringId={subtitleStringId}",
+            arguments = listOf(
+                navArgument(name = "titleStringId") {
+                    type = NavType.ReferenceType
+                    defaultValue = R.string.check_email_header_text
+                },
+                navArgument(name = "subtitleStringId") {
+                    type = NavType.ReferenceType
+                    defaultValue = R.string.check_email_header_subtitle_default_text
+                })
+        ) { backStackEntry ->
+            val titleId = backStackEntry.arguments?.getInt("titleStringId")
+            val subtitleId = backStackEntry.arguments?.getInt("subtitleStringId")
             val email = backStackEntry.arguments?.getString("email") ?: ""
-            CheckEmailScreen(navController, email)
+
+            CheckEmailScreen(email = email, titleStringId = titleId, subtitleStringId = subtitleId)
+            setIsNavHomeIndicator(false)
         }
-        composable(route = ROUTE_RESET_PASSWORD_SCREEN) { ResetPasswordScreen(navController) }
+        composable(route = ROUTE_RESET_PASSWORD_SCREEN) {
+            ResetPasswordScreen {
+                navController.navigate(route = ROUTE_LOGIN_SCREEN) {
+                    popUpTo(route = ROUTE_LOGIN_SCREEN) {
+                        inclusive = true
+                    }
+                }
+            }
+            setIsNavHomeIndicator(false)
+        }
     }
 }
+
+@Composable
+fun LoginFlow(navController: NavHostController) {
+    var isNavDestinationHome by rememberSaveable { mutableStateOf(true) }
+
+    AppScaffold(
+        isNavHome = isNavDestinationHome,
+        onUpButtonClick = { navController.popBackStack() }
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = ROUTE_LOGIN_GRAPH
+        ) {
+            loginGraph(navController,
+                setIsNavHomeIndicator = {
+                    isNavDestinationHome = it
+                })
+        }
+    }
+}
+
 
 @Composable
 fun App(isDarkMode: Boolean, isFirstLaunch: Boolean) {
     val navController = rememberNavController()
-    /*TODO : Change the start destination to toggle Welcome and Main Screens*/
-    val startDestination = if (isFirstLaunch) ROUTE_WELCOME_SCREEN else ROUTE_LOGIN_GRAPH
+    var isLaunching by rememberSaveable { mutableStateOf(isFirstLaunch) }
 
-    NavHost(navController = navController, startDestination = ROUTE_WELCOME_SCREEN) {
-        composable(route = ROUTE_WELCOME_SCREEN) {
-            WelcomeScreen(isDarkMode = isDarkMode, navController = navController)
-        }
-        loginGraph(navController)
+    if (isLaunching) {
+        WelcomeScreen(
+            isDarkMode = isDarkMode,
+            onButtonClick = {
+                isLaunching = false
+            })
+    } else {
+        LoginFlow(navController)
     }
 }
 
-@Composable
-fun SystemUiTheme() {
-    // Remember a SystemUiController
-    val systemUiController = rememberSystemUiController()
-    val darkIcons = MaterialTheme.colors.isLight
-    SideEffect {
-        // Update status bar color to be transparent, and use
-        // dark icons if we're in light theme
-        systemUiController.setStatusBarColor(
-            color = Color.Transparent,
-            darkIcons = darkIcons,
-        )
-    }
-}
+//@Composable
+//fun SystemUiTheme() {
+//    // Remember a SystemUiController
+//    val systemUiController = rememberSystemUiController()
+//    val darkIcons = MaterialTheme.colors.isLight
+//    SideEffect {
+//        // Update status bar color to be transparent, and use
+//        // dark icons if we're in light theme
+//        systemUiController.setStatusBarColor(
+//            color = Color.Transparent,
+//            darkIcons = darkIcons,
+//        )
+//    }
+//}

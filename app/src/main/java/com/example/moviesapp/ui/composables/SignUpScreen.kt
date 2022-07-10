@@ -13,12 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.reusablecomposables.*
-import com.example.moviesapp.ui.constants.ROUTE_CONFIRM_EMAIL_SCREEN
-import com.example.moviesapp.ui.constants.ROUTE_LOGIN_SCREEN
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -74,13 +70,13 @@ fun SignUpTextFields(
 }
 
 @Composable
-fun SignUpScreen(navController: NavController) {
-    AppSignUpLoginScaffold(
+fun SignUpScreen(
+    onLoginClick: () -> Unit,
+    onSignUp: (email: String) -> Unit
+) {
+    AppLoginFlowScaffold(
         headerTitle = stringResource(R.string.signup_header_text),
         headerSubtitle = stringResource(R.string.signup_header_subtitle_text),
-        onNavBackClick = {
-               navController.popBackStack()
-        },
         content = {
             SignUpTextFields(
                 firstname = "",
@@ -96,7 +92,7 @@ fun SignUpScreen(navController: NavController) {
                 title = stringResource(R.string.signup_button_text),
                 onClick = {
                     /*TODO : Perform Signing Action*/
-                    navController.navigate(route = "$ROUTE_CONFIRM_EMAIL_SCREEN/domain@hostname.com")
+                    onSignUp("domain@hostname.com")
                 }
             )
 
@@ -104,13 +100,7 @@ fun SignUpScreen(navController: NavController) {
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.signup_footer_text),
                 link = stringResource(R.string.signup_footer_link_text),
-                onLinkCLick = {
-                    navController.navigate(route = ROUTE_LOGIN_SCREEN) {
-                        popUpTo(route = ROUTE_LOGIN_SCREEN) {
-                            inclusive = true
-                        }
-                    }
-                }
+                onLinkCLick = onLoginClick
             )
         }
     )
@@ -124,7 +114,8 @@ fun SignUpScreen(navController: NavController) {
 fun SignUpScreenPreview() {
     MoviesAppTheme {
         SignUpScreen(
-            navController = rememberNavController()
+            onLoginClick = {},
+            onSignUp = {}
         )
     }
 }

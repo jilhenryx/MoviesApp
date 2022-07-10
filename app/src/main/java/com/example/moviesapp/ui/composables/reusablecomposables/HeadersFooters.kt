@@ -63,7 +63,6 @@ fun AppDefaultFooter(
             annotatedText
                 .getStringAnnotations(tag = tag, start = offset, end = offset)
                 .firstOrNull()?.let {
-                    Log.d(TAG, "AppDefaultFooter: $link clicked")
                     onLinkCLick()
                 }
 

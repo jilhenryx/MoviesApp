@@ -7,7 +7,7 @@ val spacerHeightMedium = 24.dp
 val spacerHeightLarge = 32.dp
 
 val spacedBySmall = 12.dp
-val spacedByMedium = 24.dp
+val spacedByLarge = 32.dp
 
 
 enum class TextFieldType {

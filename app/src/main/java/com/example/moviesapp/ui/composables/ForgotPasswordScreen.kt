@@ -6,28 +6,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.reusablecomposables.AppButton
 import com.example.moviesapp.ui.composables.reusablecomposables.AppButtonType
+import com.example.moviesapp.ui.composables.reusablecomposables.AppLoginFlowScaffold
 import com.example.moviesapp.ui.composables.reusablecomposables.AppOutlinedTextField
-import com.example.moviesapp.ui.composables.reusablecomposables.AppSignUpLoginScaffold
-import com.example.moviesapp.ui.constants.ROUTE_CHECK_EMAIL_SCREEN
-import com.example.moviesapp.ui.constants.ROUTE_LOGIN_SCREEN
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 
 @Composable
 fun ForgotPasswordScreen(
-    navController: NavController,
-    email: String
+    email: String,
+    onContinueClick: (email: String) -> Unit
 ) {
-    AppSignUpLoginScaffold(
+    AppLoginFlowScaffold(
         headerIconRes = R.drawable.question_icon,
-        onNavBackClick = {
-            navController.popBackStack()
-        },
         headerTitle = stringResource(R.string.forgot_password_header_text),
         headerSubtitle = stringResource(R.string.forgot_password_header_subtitle_text),
         content = {
@@ -47,9 +40,7 @@ fun ForgotPasswordScreen(
                 title = stringResource(R.string.continue_button_text).uppercase(),
                 onClick = {
                     /*TODO : Implement Reset Password Logic*/
-                    navController.navigate(route = "$ROUTE_CHECK_EMAIL_SCREEN/email") {
-                        popUpTo(route = ROUTE_LOGIN_SCREEN)
-                    }
+                    onContinueClick(email)
                 }
             )
         }
@@ -64,8 +55,8 @@ fun ForgotPasswordScreen(
 fun ForgotPasswordScreenPreview() {
     MoviesAppTheme {
         ForgotPasswordScreen(
-            navController = rememberNavController(),
-            email = "domain@hostname.com"
+            email = "domain@hostname.com",
+            onContinueClick = {}
         )
     }
 }

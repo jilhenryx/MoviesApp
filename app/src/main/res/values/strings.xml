@@ -40,12 +40,8 @@
 
     <!--EmailConfirmation Screen-->
     <string name="confirm_email_header_text">Confirm Email</string>
-    <string name="confirm_email_header_subtitle_text">
-        One last step – you need to verify your email\n
-        A verification link has been sent to your email, <b>%1$s</b>.\n
-        Please check your mailbox and click on the link
-        sent to you. After that, click on the button below
-        to continue
+    <string name="confirm_email_header_subtitle_text">One last step – you need to verify your email\nA verification link has been sent to your email, <b>%1$s</b>.\nPlease check your mailbox and click on the link
+        sent to you. After that, click on the button below to continue
     </string>
 
     <!--Retry Email-->
@@ -62,9 +58,9 @@
     </string>
 
     <!--Check Email Screen-->
-    <string name="check_email_header_text">Check Email</string>
-    <string name="check_email_header_subtitle_text">
-        A password reset link has been sent to your email, <b>%1$s</b>.
+    <string name="check_email_header_text">Check Your Email</string>
+    <string name="check_email_header_subtitle_default_text">
+        A link has been sent to your email address, <b>%1$s</b>.
         Please check your mailbox and click on the link sent to you.
     </string>
     <string name="reset_password_header_text">Reset Password</string>

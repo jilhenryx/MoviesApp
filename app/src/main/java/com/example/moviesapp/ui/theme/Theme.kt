@@ -29,10 +29,10 @@ private val LightColorPalette = lightColors(
 @Composable
 fun MoviesAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
-
+    val textColor = if (darkTheme) Grey100 else Color.Black
     MaterialTheme(
         colors = colors,
-        typography = ThemedTypography.invoke(colors.onSurface),
+        typography = ThemedTypography(textColor),
         shapes = Shapes,
         content = content
     )

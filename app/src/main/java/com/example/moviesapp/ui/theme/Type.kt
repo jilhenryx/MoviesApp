@@ -19,29 +19,30 @@ val fontFamily = FontFamily(light, regular, medium, semi_bold)
 
 // Set of Material typography styles to start with
 
-val ThemedTypography = fun(textColor: Color): Typography {
-    return Typography(
-        defaultFontFamily = fontFamily,
-        h3 = TextStyle(
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 48.sp,
-            letterSpacing = 0.sp,
-        ),
-        h4 = TextStyle(
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 36.sp,
-            letterSpacing = 0.sp,
-        ),
-        body1 = TextStyle(
-            fontWeight = FontWeight.Normal,
-            fontSize = 18.sp,
-            letterSpacing = 0.sp,
-            color = textColor
-        ),
-        button = TextStyle(
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            letterSpacing = 0.sp,
-        )
+fun ThemedTypography(textColor: Color) = Typography(
+    defaultFontFamily = fontFamily,
+    h3 = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 48.sp,
+        letterSpacing = 0.sp,
+        color = textColor,
+    ),
+    h4 = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 36.sp,
+        letterSpacing = 0.sp,
+        color = textColor,
+    ),
+    body1 = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 18.sp,
+        letterSpacing = 0.sp,
+        color = textColor,
+    ),
+    button = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        letterSpacing = 0.sp,
     )
-}
+)
+
