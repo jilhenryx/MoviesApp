@@ -26,13 +26,11 @@ val ThemedTypography = fun(textColor: Color): Typography {
             fontWeight = FontWeight.SemiBold,
             fontSize = 48.sp,
             letterSpacing = 0.sp,
-            color = textColor,
         ),
         h4 = TextStyle(
             fontWeight = FontWeight.SemiBold,
             fontSize = 36.sp,
             letterSpacing = 0.sp,
-            color = textColor,
         ),
         body1 = TextStyle(
             fontWeight = FontWeight.Normal,

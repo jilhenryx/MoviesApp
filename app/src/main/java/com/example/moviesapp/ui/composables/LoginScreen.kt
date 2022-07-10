@@ -1,5 +1,6 @@
 package com.example.moviesapp.ui.composables
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.reusablecomposables.*
+import com.example.moviesapp.ui.constants.ROUTE_FORGOT_PASSWORD_SCREEN
+import com.example.moviesapp.ui.constants.ROUTE_SIGN_UP_SCREEN
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -80,16 +85,21 @@ fun LoginButtons(onLoginCLicked: () -> Unit, onGoogleLoginCLicked: () -> Unit) {
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController
+) {
     AppSignUpLoginScaffold(
         headerTitle = stringResource(id = R.string.login_header_text),
         headerSubtitle = stringResource(id = R.string.login_subtitle_text),
+        isNavHome = true,
         content = {
             LoginTextFields(
                 email = "",
                 password = "",
                 onValueChange = { _, _ -> },
-                onForgotPasswordClick = {})
+                onForgotPasswordClick = {
+                    navController.navigate(route = "${ROUTE_FORGOT_PASSWORD_SCREEN}/domain@hostname.com")
+                })
 
             LoginButtons(onLoginCLicked = {}, onGoogleLoginCLicked = {})
 
@@ -97,7 +107,9 @@ fun LoginScreen() {
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.login_footer_text),
                 link = stringResource(R.string.login_footer_link_text),
-                onLinkCLick = {})
+                onLinkCLick = {
+                    navController.navigate(route = ROUTE_SIGN_UP_SCREEN)
+                })
         }
     )
 }
@@ -105,10 +117,13 @@ fun LoginScreen() {
 @Preview(
     showBackground = true,
     showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
 fun LoginScreenPreview() {
     MoviesAppTheme {
-        LoginScreen()
+        LoginScreen(
+            navController = rememberNavController()
+        )
     }
 }

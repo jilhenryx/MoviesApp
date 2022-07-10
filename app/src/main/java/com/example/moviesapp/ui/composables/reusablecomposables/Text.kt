@@ -34,7 +34,6 @@ fun AppOutlinedTextField(
         modifier = modifier,
         value = value,
         singleLine = true,
-        readOnly = true,
         textStyle = TextStyle(fontSize = 18.sp),
         label = { Text(text = label) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
@@ -74,7 +73,6 @@ fun AppOutlinedTextFieldPassword(
         value = value,
         textStyle = TextStyle(fontSize = 18.sp),
         singleLine = true,
-        readOnly = true,
         trailingIcon = {
             if (iconIsSet) {
                 IconButton(onClick = onPasswordToggle) {

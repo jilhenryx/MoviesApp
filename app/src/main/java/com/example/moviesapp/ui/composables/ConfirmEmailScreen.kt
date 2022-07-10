@@ -5,8 +5,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
-import com.example.moviesapp.ui.composables.reusablecomposables.*
+import com.example.moviesapp.ui.composables.reusablecomposables.AppButton
+import com.example.moviesapp.ui.composables.reusablecomposables.AppButtonType
+import com.example.moviesapp.ui.composables.reusablecomposables.AppSignUpLoginScaffold
+import com.example.moviesapp.ui.composables.reusablecomposables.RetryEmailText
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -29,12 +34,12 @@ fun ConfirmEmailContent(
 }
 
 @Composable
-fun ConfirmEmailScreen() {
-    val email = "domain@hostname.com"
+fun ConfirmEmailScreen(navController: NavController, email: String) {
     AppSignUpLoginScaffold(
         headerIconRes = R.drawable.new_mail_icon,
-        spacerHeight = spacerHeightLarge,
-
+        onNavBackClick = {
+            navController.popBackStack()
+        },
         headerTitle = stringResource(R.string.confirm_email_header_text),
         headerSubtitle = stringResource(
             R.string.confirm_email_header_subtitle_text,
@@ -45,8 +50,12 @@ fun ConfirmEmailScreen() {
             ConfirmEmailContent(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 timerText = "4:00",
-                onButtonClick = {},
-                onRetryClick = {}
+                onButtonClick = {
+                    /*TODO: Navigate to Main Screen if Email Has Been Verified*/
+                },
+                onRetryClick = {
+                    /*TODO: Implement Retry Timer Logic*/
+                }
             )
         }
     )
@@ -60,6 +69,9 @@ fun ConfirmEmailScreen() {
 @Composable
 fun ConfirmEmailScreenPreview() {
     MoviesAppTheme {
-        ConfirmEmailScreen()
+        ConfirmEmailScreen(
+            email="domain@hostname.com",
+            navController = rememberNavController()
+        )
     }
 }

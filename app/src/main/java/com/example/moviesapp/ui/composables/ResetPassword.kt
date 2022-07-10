@@ -11,8 +11,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
-import com.example.moviesapp.ui.composables.reusablecomposables.*
+import com.example.moviesapp.ui.composables.reusablecomposables.AppButton
+import com.example.moviesapp.ui.composables.reusablecomposables.AppButtonType
+import com.example.moviesapp.ui.composables.reusablecomposables.AppOutlinedTextFieldPassword
+import com.example.moviesapp.ui.composables.reusablecomposables.AppSignUpLoginScaffold
+import com.example.moviesapp.ui.constants.ROUTE_LOGIN_SCREEN
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -47,10 +53,14 @@ fun ResetPasswordTextFields(
 }
 
 @Composable
-fun ResetPasswordScreen() {
+fun ResetPasswordScreen(
+    navController: NavController
+) {
     AppSignUpLoginScaffold(
         headerIconRes = R.drawable.password_reset_icon,
-        spacerHeight = spacerHeightLarge,
+        onNavBackClick = {
+            navController.popBackStack()
+        },
         headerTitle = stringResource(R.string.reset_password_header_text),
         headerSubtitle = stringResource(R.string.rest_password_header_subtitle_text),
         content = {
@@ -62,7 +72,14 @@ fun ResetPasswordScreen() {
             AppButton(
                 type = AppButtonType.FILLED,
                 title = stringResource(R.string.confirm_button_text).uppercase(),
-                onClick = { }
+                onClick = {
+                    /*TODO : Implement Reset Password Logic*/
+                    navController.navigate(route = ROUTE_LOGIN_SCREEN) {
+                        popUpTo(route = ROUTE_LOGIN_SCREEN) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     )
@@ -75,6 +92,8 @@ fun ResetPasswordScreen() {
 @Composable
 fun ResetPasswordScreenPreview() {
     MoviesAppTheme {
-        ResetPasswordScreen()
+        ResetPasswordScreen(
+            rememberNavController()
+        )
     }
 }

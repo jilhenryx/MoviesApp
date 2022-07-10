@@ -5,17 +5,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = Grey800,
-    primaryVariant = Grey700,
-    secondary = BlueGrey700,
-    secondaryVariant = BlueGrey600,
+    primary = Indigo200,
+    primaryVariant = Indigo100,
+    secondary = Blue200,
+    secondaryVariant = Blue100,
     onPrimary = Color.White,
     onSecondary = Color.White,
+    onSurface = Grey100,
+    onBackground = Grey100,
 )
 
 private val LightColorPalette = lightColors(
@@ -29,11 +29,10 @@ private val LightColorPalette = lightColors(
 @Composable
 fun MoviesAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
-    val textColor = if (darkTheme) Color.White else Color.Black
 
     MaterialTheme(
         colors = colors,
-        typography = ThemedTypography(textColor),
+        typography = ThemedTypography.invoke(colors.onSurface),
         shapes = Shapes,
         content = content
     )

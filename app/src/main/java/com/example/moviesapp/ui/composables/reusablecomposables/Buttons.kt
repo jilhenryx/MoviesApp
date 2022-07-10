@@ -1,7 +1,9 @@
 package com.example.moviesapp.ui.composables.reusablecomposables
 
+import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -25,31 +27,33 @@ fun AppButtonContent(
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-        if (leadingIcon != null) {
-            Icon(
-                modifier = Modifier.size(32.dp),
-                painter = painterResource(leadingIcon),
-                contentDescription = null,
-                tint = iconTint ?: Color.Unspecified
-            )
-        }
-        Text(
-            text = title,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = textColor ?: Color.White,
-            style = MaterialTheme.typography.button
+    if (leadingIcon != null) {
+        Icon(
+            modifier = Modifier.size(ButtonDefaults.IconSize),
+            painter = painterResource(leadingIcon),
+            contentDescription = null,
+            tint = iconTint ?: Color.Unspecified
         )
-        if (trailingIcon != null) {
-            Icon(
-                modifier = Modifier.size(32.dp),
-                painter = painterResource(trailingIcon),
-                contentDescription = null,
-                tint = iconTint ?: Color.Unspecified
-            )
-        }
+        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
     }
+    Text(
+        text = title,
+        maxLines = 1,
+        modifier = Modifier.padding(top = 2.dp),
+        overflow = TextOverflow.Ellipsis,
+        color = textColor ?: MaterialTheme.colors.onSurface,
+        style = MaterialTheme.typography.button
+    )
+    if (trailingIcon != null) {
+        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+        Icon(
+            modifier = Modifier.size(ButtonDefaults.IconSize),
+            painter = painterResource(trailingIcon),
+            contentDescription = null,
+            tint = iconTint ?: Color.Unspecified
+        )
+    }
+
 }
 
 enum class AppButtonType {
@@ -78,6 +82,7 @@ fun AppButton(
             ) {
                 AppButtonContent(
                     title = title,
+                    textColor = if (isSystemInDarkTheme()) Color.Black else Color.White,
                     iconTint = iconTint,
                     leadingIcon = leadingIcon,
                     trailingIcon = trailingIcon
@@ -95,7 +100,6 @@ fun AppButton(
             ) {
                 AppButtonContent(
                     title = title,
-                    textColor = MaterialTheme.colors.onSurface,
                     iconTint = iconTint,
                     leadingIcon = leadingIcon,
                     trailingIcon = trailingIcon
@@ -105,7 +109,10 @@ fun AppButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun AppButtonsPreview() {
     MoviesAppTheme {

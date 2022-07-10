@@ -24,7 +24,7 @@ fun AppDefaultHeader(
     Column {
         Text(
             text = title,
-            style = MaterialTheme.typography.h4,
+            style = MaterialTheme.typography.h3,
         )
         Text(
             text = subtitle,
@@ -68,20 +68,6 @@ fun AppDefaultFooter(
                 }
 
         })
-//    Row(
-//        modifier = modifier,
-//        horizontalArrangement = Arrangement.spacedBy(2.dp)
-//    ) {
-//        Text(text = text)
-//        if (link != null) {
-//            Text(
-//                modifier = Modifier.clickable(onClick = onLinkCLick),
-//                text = link,
-//                color = MaterialTheme.colors.primary,
-//                fontWeight = FontWeight.Bold,
-//            )
-//        }
-//    }
 }
 
 @Preview(showBackground = true)

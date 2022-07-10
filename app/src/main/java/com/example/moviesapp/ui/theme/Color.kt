@@ -9,7 +9,8 @@ val Blue700 = Color(0xFF1976D2)
 val Blue600 = Color(0xFF1E88E5)
 
 //Dark Theme Colors
-val Grey800 = Color(0xFF424242)
-val Grey700 = Color(0xFF616161)
-val BlueGrey700 = Color(0xFF455A64)
-val BlueGrey600 = Color(0xFF546E7A)
+val Grey100 = Color(0xFFF5F5F5)
+val Indigo100 = Color(0xFFC5CAE9)
+val Indigo200 = Color(0xFF9FA8DA)
+val Blue100 = Color(0xFFBBDEFB)
+val Blue200 = Color(0xFF90CAF9)

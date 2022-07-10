@@ -13,8 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.reusablecomposables.*
+import com.example.moviesapp.ui.constants.ROUTE_CONFIRM_EMAIL_SCREEN
+import com.example.moviesapp.ui.constants.ROUTE_LOGIN_SCREEN
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -70,10 +74,13 @@ fun SignUpTextFields(
 }
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
     AppSignUpLoginScaffold(
         headerTitle = stringResource(R.string.signup_header_text),
         headerSubtitle = stringResource(R.string.signup_header_subtitle_text),
+        onNavBackClick = {
+               navController.popBackStack()
+        },
         content = {
             SignUpTextFields(
                 firstname = "",
@@ -87,14 +94,23 @@ fun SignUpScreen() {
             AppButton(
                 type = AppButtonType.FILLED,
                 title = stringResource(R.string.signup_button_text),
-                onClick = {}
+                onClick = {
+                    /*TODO : Perform Signing Action*/
+                    navController.navigate(route = "$ROUTE_CONFIRM_EMAIL_SCREEN/domain@hostname.com")
+                }
             )
 
             AppDefaultFooter(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.signup_footer_text),
                 link = stringResource(R.string.signup_footer_link_text),
-                onLinkCLick = {}
+                onLinkCLick = {
+                    navController.navigate(route = ROUTE_LOGIN_SCREEN) {
+                        popUpTo(route = ROUTE_LOGIN_SCREEN) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     )
@@ -107,6 +123,8 @@ fun SignUpScreen() {
 @Composable
 fun SignUpScreenPreview() {
     MoviesAppTheme {
-        SignUpScreen()
+        SignUpScreen(
+            navController = rememberNavController()
+        )
     }
 }
