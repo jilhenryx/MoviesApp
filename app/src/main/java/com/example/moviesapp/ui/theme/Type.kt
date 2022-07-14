@@ -19,7 +19,7 @@ val fontFamily = FontFamily(light, regular, medium, semi_bold)
 
 // Set of Material typography styles to start with
 
-fun ThemedTypography(textColor: Color) = Typography(
+fun themedTypography(textColor: Color) = Typography(
     defaultFontFamily = fontFamily,
     h3 = TextStyle(
         fontWeight = FontWeight.SemiBold,

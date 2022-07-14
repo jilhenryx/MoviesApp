@@ -32,7 +32,7 @@ fun MoviesAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
     val textColor = if (darkTheme) Grey100 else Color.Black
     MaterialTheme(
         colors = colors,
-        typography = ThemedTypography(textColor),
+        typography = themedTypography(textColor),
         shapes = Shapes,
         content = content
     )

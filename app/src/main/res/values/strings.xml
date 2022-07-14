@@ -38,10 +38,17 @@
     <string name="signup_footer_text">Already have an account?</string>
     <string name="signup_footer_link_text">@string/login_header_text</string>
 
-    <!--EmailConfirmation Screen-->
+    <!--Check Email Screen-->
+    <string name="check_email_header_text">Check Your Email</string>
+    <string name="check_email_header_subtitle_default_text">A link has been sent to your email address, <em>%1$s</em>. Please check your mailbox and click on the link sent to you.
+    </string>
     <string name="confirm_email_header_text">Confirm Email</string>
     <string name="confirm_email_header_subtitle_text">One last step – you need to verify your email\nA verification link has been sent to your email, <b>%1$s</b>.\nPlease check your mailbox and click on the link
-        sent to you. After that, click on the button below to continue
+        sent to you.
+    </string>
+    <string name="yet_to_confirm_email_header_text">Your Email is Not Verified</string>
+    <string name="yet_to_confirm_email_header_subtitle_text">You need to verify your email to proceed.\nA verification link has been sent to your email, <b>%1$s</b>.\nPlease check your mailbox and click on the link
+        sent to you.
     </string>
 
     <!--Retry Email-->
@@ -57,13 +64,13 @@
         email address and continue.
     </string>
 
-    <!--Check Email Screen-->
-    <string name="check_email_header_text">Check Your Email</string>
-    <string name="check_email_header_subtitle_default_text">
-        A link has been sent to your email address, <b>%1$s</b>.
-        Please check your mailbox and click on the link sent to you.
-    </string>
+    <!-- ResetPassword Screen -->
     <string name="reset_password_header_text">Reset Password</string>
-    <string name="rest_password_header_subtitle_text">Please enter a new password for your account</string>
+    <string name="rest_password_header_subtitle_text">Please enter a new password for your account,<b>%1$s</b></string>
     <string name="confirm_button_text">Confirm</string>
+
+    <!--Error Messages-->
+    <string name="default_error_message">Oops! Something went wrong. Please try again later</string>
+    <string name="default__login_error_message">Unable to Login. The email or password entered is not correct</string>
+    <string name="default_sign_up_error_message">Unable to create a new account. The email already exists</string>
 </resources>

@@ -12,12 +12,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composables.reusablecomposables.AppButton
 import com.example.moviesapp.ui.composables.reusablecomposables.AppButtonType
 import com.example.moviesapp.ui.composables.reusablecomposables.AppDefaultHeader
+import com.example.moviesapp.ui.constants.MEDIUM_SPACING
+import com.example.moviesapp.ui.constants.SMALL_SPACING
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -42,7 +42,7 @@ fun WelcomeScreenContent(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(spacerHeightMedium)
+        verticalArrangement = Arrangement.spacedBy(MEDIUM_SPACING)
     ) {
         AppDefaultHeader(
             title = stringResource(R.string.welcome_header),
@@ -55,7 +55,7 @@ fun WelcomeScreenContent(
             iconTint = MaterialTheme.colors.background,
             onClick = onButtonClick
         )
-        Spacer(modifier = Modifier.height(spacerHeightSmall))
+        Spacer(modifier = Modifier.height(SMALL_SPACING))
     }
 }
 
@@ -71,7 +71,7 @@ fun WelcomeScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = SMALL_SPACING),
             onButtonClick = onButtonClick
         )
     }

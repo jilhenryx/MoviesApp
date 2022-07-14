@@ -1,7 +1,6 @@
 package com.example.moviesapp.ui.composables.reusablecomposables
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -9,17 +8,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.moviesapp.R
 
 @Composable
 fun AppLoginFlowScaffold(
+    modifier: Modifier = Modifier,
     @DrawableRes headerIconRes: Int? = null,
     headerTitle: String,
     headerSubtitle: String = "",
+    headerSubtitleColor: Color? = null,
+    contentSpacing: Dp? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    AppContentColumn {
+    AppContentColumn(
+        modifier = modifier,
+        contentSpacing = contentSpacing
+    ) {
         if (headerIconRes != null) {
             Icon(
                 modifier = Modifier
@@ -32,7 +38,8 @@ fun AppLoginFlowScaffold(
         }
         AppDefaultHeader(
             title = headerTitle,
-            subtitle = headerSubtitle
+            subtitle = headerSubtitle,
+            subtitleColor = headerSubtitleColor
         )
         content()
     }

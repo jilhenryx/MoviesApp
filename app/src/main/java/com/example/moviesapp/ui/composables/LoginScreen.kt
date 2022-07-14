@@ -4,27 +4,34 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviesapp.R
+import com.example.moviesapp.network.AppAuthResult
 import com.example.moviesapp.ui.composables.reusablecomposables.*
-import com.example.moviesapp.ui.constants.ROUTE_FORGOT_PASSWORD_SCREEN
-import com.example.moviesapp.ui.constants.ROUTE_SIGN_UP_SCREEN
+import com.example.moviesapp.ui.constants.*
+import com.example.moviesapp.ui.constants.DEFAULT_ERROR_MESSAGE
+import com.example.moviesapp.ui.constants.SMALL_SPACING
+import com.example.moviesapp.ui.constants.isFieldCorrect
+import com.example.moviesapp.ui.stateholders.rememberLoginStateHolder
 import com.example.moviesapp.ui.theme.MoviesAppTheme
+import com.example.moviesapp.viewmodels.AuthViewModel
+import kotlinx.coroutines.launch
+
+private const val TAG = "LoginScreen"
 
 @Composable
 fun LoginTextFields(
@@ -34,20 +41,38 @@ fun LoginTextFields(
     onForgotPasswordClick: () -> Unit,
 ) {
     var showPassword by rememberSaveable { mutableStateOf(false) }
+    var isEmailCorrect by rememberSaveable { mutableStateOf(true) }
+    var isPasswordCorrect by rememberSaveable { mutableStateOf(true) }
 
-    Column(verticalArrangement = Arrangement.spacedBy(spacedBySmall)) {
+    Column(verticalArrangement = Arrangement.spacedBy(SMALL_SPACING)) {
         AppOutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    isEmailCorrect =
+                        if (!it.hasFocus && email.isNotBlank())
+                            isFieldCorrect(email, TextFieldType.EMAIL)
+                        else true
+                },
             value = email,
             label = stringResource(R.string.text_field_email_label),
+            isError = !isEmailCorrect,
             onValueChange = { value -> onValueChange(value, TextFieldType.EMAIL) },
             keyboardType = KeyboardType.Email
         )
         AppOutlinedTextFieldPassword(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    isPasswordCorrect =
+                        if (!it.hasFocus && password.isNotBlank())
+                            isFieldCorrect(password, TextFieldType.PASSWORD)
+                        else true
+                },
             value = password,
             label = stringResource(R.string.text_field_password_label),
             showCharacters = showPassword,
+            isError = !isPasswordCorrect,
             visibilityOnIcon = R.drawable.ic_baseline_visibility_24,
             visibilityOffIcon = R.drawable.ic_baseline_visibility_off_24,
             onValueChange = { value -> onValueChange(value, TextFieldType.PASSWORD) },
@@ -66,7 +91,7 @@ fun LoginTextFields(
 
 @Composable
 fun LoginButtons(onLoginCLicked: () -> Unit, onGoogleLoginCLicked: () -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(spacedBySmall)) {
+    Column(verticalArrangement = Arrangement.spacedBy(SMALL_SPACING)) {
         AppButton(
             type = AppButtonType.FILLED,
             title = stringResource(id = R.string.login_button_text).uppercase(),
@@ -87,28 +112,90 @@ fun LoginButtons(onLoginCLicked: () -> Unit, onGoogleLoginCLicked: () -> Unit) {
 
 @Composable
 fun LoginScreen(
-    onForgotPasswordClick: (email:String) -> Unit,
+    viewModel: AuthViewModel = viewModel(),
+    onForgotPasswordClick: (email: String) -> Unit,
     onSignUpClick: () -> Unit,
+    navigateToMain: () -> Unit,
+    navigateToCheckEmail: (email: String) -> Unit
 ) {
-    AppLoginFlowScaffold(
-        headerTitle = stringResource(id = R.string.login_header_text),
-        headerSubtitle = stringResource(id = R.string.login_subtitle_text),
-        content = {
-            LoginTextFields(
-                email = "",
-                password = "",
-                onValueChange = { _, _ -> },
-                onForgotPasswordClick = { onForgotPasswordClick("domain@hostname.com") })
+    val stateHolder = rememberLoginStateHolder()
+    val coroutineScope = rememberCoroutineScope()
+    var isLoading by rememberSaveable { mutableStateOf(false) }
 
-            LoginButtons(onLoginCLicked = {}, onGoogleLoginCLicked = {})
+    Box {
+        AppLoginFlowScaffold(
+            headerTitle = stringResource(R.string.login_header_text),
+            headerSubtitle = stateHolder.subtitleState.value.ifBlank { stringResource(R.string.login_subtitle_text) },
+            headerSubtitleColor = stateHolder.subtitleColorState.value
+        ) {
+            LoginTextFields(
+                email = stateHolder.email,
+                password = stateHolder.password,
+                onValueChange = stateHolder::onValueChange,
+                onForgotPasswordClick = {
+                    if (stateHolder.email.isBlank()
+                        || !isFieldCorrect(stateHolder.email, TextFieldType.EMAIL)
+                    ) {
+                        stateHolder.subtitleState.value = "Please enter a valid email address"
+                        stateHolder.subtitleColorState.value = Color.Red
+                    } else {
+                        stateHolder.subtitleState.value = ""
+                        stateHolder.subtitleColorState.value = null
+                        onForgotPasswordClick(stateHolder.email)
+                    }
+                },
+            )
+
+            LoginButtons(onLoginCLicked = {
+                if (!stateHolder.areAllFieldsCorrect()) {
+                    stateHolder.subtitleState.value =
+                        DEFAULT_EMPTY_FIELDS_MESSAGE
+                    stateHolder.subtitleColorState.value = Color.Red
+                } else {
+                    stateHolder.subtitleState.value = ""
+                    stateHolder.subtitleColorState.value = null
+                    coroutineScope.launch {
+                        stateHolder.subtitleState.value = ""
+                        viewModel.login(
+                            stateHolder.email,
+                            stateHolder.password
+                        ).collect { authResult ->
+                            when (authResult.state) {
+                                AppAuthResult.ResultState.LOADING -> {
+                                    isLoading = true
+                                }
+                                AppAuthResult.ResultState.SUCCESS -> {
+                                    isLoading = false
+                                    if (viewModel.isUserEmailVerified()) {
+                                        navigateToMain()
+                                    } else {
+                                        viewModel.sendVerificationEmail()
+                                        navigateToCheckEmail(stateHolder.email)
+                                    }
+                                }
+                                AppAuthResult.ResultState.ERROR -> {
+                                    Log.d(TAG, "LoginScreen: Login Failed")
+                                    stateHolder.subtitleState.value =
+                                        authResult.errorMessage ?: DEFAULT_ERROR_MESSAGE
+                                    stateHolder.subtitleColorState.value = Color.Red
+                                    isLoading = false
+                                }
+                            }
+                        }
+                    }
+                }
+            }, onGoogleLoginCLicked = {})
 
             AppDefaultFooter(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = stringResource(R.string.login_footer_text),
                 link = stringResource(R.string.login_footer_link_text),
-                onLinkCLick = onSignUpClick)
+                onLinkCLick = onSignUpClick
+            )
         }
-    )
+        if (isLoading) LoadingScreen()
+    }
+
 }
 
 @Preview(
@@ -121,7 +208,9 @@ fun LoginScreenPreview() {
     MoviesAppTheme {
         LoginScreen(
             onForgotPasswordClick = {},
-            onSignUpClick = {}
+            onSignUpClick = {},
+            navigateToMain = {},
+            navigateToCheckEmail = {}
         )
     }
 }

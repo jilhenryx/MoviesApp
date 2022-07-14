@@ -7,12 +7,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.example.moviesapp.ui.composables.spacedByLarge
+import androidx.compose.ui.unit.Dp
+import com.example.moviesapp.ui.constants.MEDIUM_SPACING
+import com.example.moviesapp.ui.constants.SMALL_SPACING
 
 @Composable
 fun AppContentColumn(
     modifier: Modifier = Modifier,
+    contentSpacing: Dp? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val bottomPadding by animateDpAsState(
@@ -25,14 +27,14 @@ fun AppContentColumn(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = SMALL_SPACING),
         verticalArrangement = Arrangement.Center,
     ) {
         Column(
             modifier = Modifier
                 .padding(bottom = bottomPadding)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(spacedByLarge)
+            verticalArrangement = Arrangement.spacedBy(contentSpacing ?: MEDIUM_SPACING)
         ) {
             content()
         }

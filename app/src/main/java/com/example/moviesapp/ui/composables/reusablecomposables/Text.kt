@@ -11,6 +11,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -18,8 +19,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import com.example.moviesapp.R
+import com.example.moviesapp.ui.constants.SMALL_TEXT_STYLE_SIZE
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 
 @Composable
@@ -27,6 +28,7 @@ fun AppOutlinedTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String,
+    isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueChange: (value: String) -> Unit
 ) {
@@ -34,8 +36,9 @@ fun AppOutlinedTextField(
         modifier = modifier,
         value = value,
         singleLine = true,
-        textStyle = TextStyle(fontSize = 18.sp),
+        textStyle = TextStyle(fontSize = SMALL_TEXT_STYLE_SIZE),
         label = { Text(text = label) },
+        isError = isError,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         onValueChange = onValueChange
     )
@@ -47,6 +50,7 @@ fun AppOutlinedTextFieldPassword(
     value: String,
     label: String,
     showCharacters: Boolean = false,
+    isError: Boolean = false,
     @DrawableRes visibilityOnIcon: Int? = null,
     @DrawableRes visibilityOffIcon: Int? = null,
     onValueChange: (value: String) -> Unit,
@@ -71,7 +75,7 @@ fun AppOutlinedTextFieldPassword(
     OutlinedTextField(
         modifier = modifier,
         value = value,
-        textStyle = TextStyle(fontSize = 18.sp),
+        textStyle = TextStyle(fontSize = SMALL_TEXT_STYLE_SIZE),
         singleLine = true,
         trailingIcon = {
             if (iconIsSet) {
@@ -88,7 +92,8 @@ fun AppOutlinedTextFieldPassword(
         visualTransformation =
         if (showCharacters) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        onValueChange = onValueChange
+        onValueChange = onValueChange,
+        isError = isError,
     )
 }
 
@@ -96,13 +101,15 @@ fun AppOutlinedTextFieldPassword(
 fun RetryEmailText(
     modifier: Modifier = Modifier,
     timerText: String,
+    linkColor: Color? = null,
     onRetryClicked: () -> Unit
 ) {
     AppDefaultFooter(
         modifier = modifier,
         text = stringResource(R.string.no_email_text),
         link = stringResource(R.string.no_email_text_retry),
-        otherText = "in $timerText",
+        linkColor = linkColor,
+        otherText = if (timerText.isNotBlank()) "in $timerText" else "",
         onLinkCLick = onRetryClicked
     )
 }

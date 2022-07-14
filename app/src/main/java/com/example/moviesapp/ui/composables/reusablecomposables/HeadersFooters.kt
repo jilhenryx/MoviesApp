@@ -1,12 +1,12 @@
 package com.example.moviesapp.ui.composables.reusablecomposables
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -20,14 +20,16 @@ private const val TAG = "HeadersFooters"
 fun AppDefaultHeader(
     title: String,
     subtitle: String,
+    subtitleColor: Color? = null
 ) {
     Column {
         Text(
             text = title,
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.h4,
         )
         Text(
             text = subtitle,
+            color = subtitleColor ?: MaterialTheme.colors.onSurface
         )
     }
 }
@@ -38,6 +40,7 @@ fun AppDefaultFooter(
     text: String,
     link: String? = null,
     otherText: String = "",
+    linkColor: Color? = null,
     onLinkCLick: () -> Unit
 ) {
     val annotatedText = buildAnnotatedString {
@@ -46,7 +49,7 @@ fun AppDefaultFooter(
             pushStringAnnotation(tag = link, annotation = "")
             withStyle(
                 style = SpanStyle(
-                    color = MaterialTheme.colors.primary,
+                    color = linkColor ?: MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold
                 )
             ) { append(" $link ") }
