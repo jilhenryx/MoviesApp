@@ -10,13 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviesapp.R
+import com.example.moviesapp.network.AuthHandler
 import com.example.moviesapp.ui.composables.reusablecomposables.AppLoginFlowScaffold
 import com.example.moviesapp.ui.composables.reusablecomposables.RetryEmailText
 import com.example.moviesapp.ui.constants.LARGE_SPACING
 import com.example.moviesapp.ui.theme.MoviesAppTheme
-import com.example.moviesapp.viewmodels.AuthViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
@@ -30,8 +29,8 @@ enum class CheckEmailType {
 
 @Composable
 fun CheckEmailScreen(
-    viewModel: AuthViewModel = viewModel(),
     email: String,
+    authHandler: AuthHandler,
     checkEmailType: CheckEmailType,
     @StringRes titleStringId: Int?,
     @StringRes subtitleStringId: Int?
@@ -65,11 +64,11 @@ fun CheckEmailScreen(
                     if (canRetry) {
                         when (checkEmailType) {
                             CheckEmailType.VERIFY_EMAIL -> {
-                                viewModel.sendVerificationEmail()
+                                authHandler.sendVerificationEmail()
                             }
                             CheckEmailType.RESET_PASSWORD -> {
                                 coroutineScope.launch {
-                                    viewModel.sendPasswordResetEmail(email)
+                                    authHandler.sendPasswordResetEmail(email)
                                 }
                             }
                             CheckEmailType.NONE -> {
@@ -85,7 +84,7 @@ fun CheckEmailScreen(
 }
 
 @Composable
-fun produceTimerText(): State<String> {
+private fun produceTimerText(): State<String> {
     val initialValue = "4:00"
     return produceState(initialValue = initialValue) {
 

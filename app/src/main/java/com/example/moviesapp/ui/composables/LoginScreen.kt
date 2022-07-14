@@ -15,17 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.moviesapp.R
 import com.example.moviesapp.network.AppAuthResult
 import com.example.moviesapp.ui.composables.reusablecomposables.*
 import com.example.moviesapp.ui.constants.*
-import com.example.moviesapp.ui.constants.DEFAULT_ERROR_MESSAGE
-import com.example.moviesapp.ui.constants.SMALL_SPACING
-import com.example.moviesapp.ui.constants.isFieldCorrect
 import com.example.moviesapp.ui.stateholders.rememberLoginStateHolder
 import com.example.moviesapp.ui.theme.MoviesAppTheme
 import com.example.moviesapp.viewmodels.AuthViewModel
@@ -34,7 +33,7 @@ import kotlinx.coroutines.launch
 private const val TAG = "LoginScreen"
 
 @Composable
-fun LoginTextFields(
+private fun LoginTextFields(
     email: String,
     password: String,
     onValueChange: (value: String, fieldType: TextFieldType) -> Unit,
@@ -90,7 +89,7 @@ fun LoginTextFields(
 }
 
 @Composable
-fun LoginButtons(onLoginCLicked: () -> Unit, onGoogleLoginCLicked: () -> Unit) {
+private fun LoginButtons(onLoginCLicked: () -> Unit, onGoogleLoginCLicked: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(SMALL_SPACING)) {
         AppButton(
             type = AppButtonType.FILLED,
@@ -120,13 +119,14 @@ fun LoginScreen(
 ) {
     val stateHolder = rememberLoginStateHolder()
     val coroutineScope = rememberCoroutineScope()
+    val lifecycleOwner = LocalLifecycleOwner.current
     var isLoading by rememberSaveable { mutableStateOf(false) }
 
     Box {
         AppLoginFlowScaffold(
             headerTitle = stringResource(R.string.login_header_text),
             headerSubtitle = stateHolder.subtitleState.value.ifBlank { stringResource(R.string.login_subtitle_text) },
-            headerSubtitleColor = stateHolder.subtitleColorState.value
+            isSubtitleError = stateHolder.subtitleColorState.value
         ) {
             LoginTextFields(
                 email = stateHolder.email,
@@ -159,29 +159,31 @@ fun LoginScreen(
                         viewModel.login(
                             stateHolder.email,
                             stateHolder.password
-                        ).collect { authResult ->
-                            when (authResult.state) {
-                                AppAuthResult.ResultState.LOADING -> {
-                                    isLoading = true
-                                }
-                                AppAuthResult.ResultState.SUCCESS -> {
-                                    isLoading = false
-                                    if (viewModel.isUserEmailVerified()) {
-                                        navigateToMain()
-                                    } else {
-                                        viewModel.sendVerificationEmail()
-                                        navigateToCheckEmail(stateHolder.email)
+                        ).flowWithLifecycle(lifecycleOwner.lifecycle)
+                            .collect { authResult ->
+                                Log.d(TAG, "LoginScreen: Collecting Flow ${authResult.state}")
+                                when (authResult.state) {
+                                    AppAuthResult.ResultState.LOADING -> {
+                                        isLoading = true
+                                    }
+                                    AppAuthResult.ResultState.SUCCESS -> {
+                                        isLoading = false
+                                        if (viewModel.isUserEmailVerified()) {
+                                            navigateToMain()
+                                        } else {
+                                            viewModel.sendVerificationEmail()
+                                            navigateToCheckEmail(stateHolder.email)
+                                        }
+                                    }
+                                    AppAuthResult.ResultState.ERROR -> {
+                                        Log.d(TAG, "LoginScreen: Login Failed")
+                                        stateHolder.subtitleState.value =
+                                            authResult.errorMessage ?: DEFAULT_ERROR_MESSAGE
+                                        stateHolder.subtitleColorState.value = Color.Red
+                                        isLoading = false
                                     }
                                 }
-                                AppAuthResult.ResultState.ERROR -> {
-                                    Log.d(TAG, "LoginScreen: Login Failed")
-                                    stateHolder.subtitleState.value =
-                                        authResult.errorMessage ?: DEFAULT_ERROR_MESSAGE
-                                    stateHolder.subtitleColorState.value = Color.Red
-                                    isLoading = false
-                                }
                             }
-                        }
                     }
                 }
             }, onGoogleLoginCLicked = {})

@@ -1,20 +1,12 @@
 package com.example.moviesapp.ui.composables
 
-import android.content.Intent
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.*
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
-import com.example.moviesapp.R
-import com.example.moviesapp.ui.composables.reusablecomposables.AppScaffold
-import com.example.moviesapp.ui.constants.*
 import com.example.moviesapp.ui.navigation.LoginFlow
-import com.example.moviesapp.ui.navigation.loginGraph
-import com.example.moviesapp.viewmodels.AuthViewModel
 
 @Composable
 fun App(isDarkMode: Boolean, isFirstLaunch: Boolean) {

@@ -20,7 +20,7 @@ private const val TAG = "HeadersFooters"
 fun AppDefaultHeader(
     title: String,
     subtitle: String,
-    subtitleColor: Color? = null
+    isSubtitleError: Boolean = false
 ) {
     Column {
         Text(
@@ -29,7 +29,8 @@ fun AppDefaultHeader(
         )
         Text(
             text = subtitle,
-            color = subtitleColor ?: MaterialTheme.colors.onSurface
+            color =
+            if (isSubtitleError) MaterialTheme.colors.error else MaterialTheme.colors.onSurface
         )
     }
 }

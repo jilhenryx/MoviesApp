@@ -4,6 +4,7 @@
     <style name="Theme.MoviesApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:colorBackground">@color/dark_gray</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 

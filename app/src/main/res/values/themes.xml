@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.MoviesApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:drawable">@drawable/splash_screen_light</item>
+        <item name="android:colorBackground">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
     <style name="Theme.Splash" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

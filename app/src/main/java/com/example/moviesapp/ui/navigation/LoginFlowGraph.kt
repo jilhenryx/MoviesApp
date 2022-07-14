@@ -1,18 +1,24 @@
 package com.example.moviesapp.ui.navigation
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.moviesapp.R
+import com.example.moviesapp.network.AuthHandler
 import com.example.moviesapp.ui.composables.*
 import com.example.moviesapp.ui.composables.reusablecomposables.AppScaffold
 import com.example.moviesapp.ui.constants.*
-import com.example.moviesapp.viewmodels.AuthViewModel
+import com.example.moviesapp.viewmodels.ForgotPasswordViewModel
 
 internal fun NavGraphBuilder.loginGraph(
     navController: NavController,
@@ -89,13 +95,10 @@ internal fun NavGraphBuilder.loginGraph(
         * FORGOT PASSWORD
          */
         composable(route = "$ROUTE_FORGOT_PASSWORD_SCREEN/{email}") { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(ROUTE_LOGIN_GRAPH)
-            }
-            val parentViewModel = hiltViewModel<AuthViewModel>(parentEntry)
+            val viewModel = hiltViewModel<ForgotPasswordViewModel>()
             val email = backStackEntry.arguments?.getString("email") ?: ""
             ForgotPasswordScreen(
-                parentViewModel,
+                viewModel,
                 email,
                 navigate = { emailAddress ->
                     navController.navigate(
@@ -135,10 +138,6 @@ internal fun NavGraphBuilder.loginGraph(
                 }
             )
         ) { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(ROUTE_LOGIN_GRAPH)
-            }
-            val parentViewModel = hiltViewModel<AuthViewModel>(parentEntry)
             val checkEmailType =
                 backStackEntry.arguments?.getSerializable("checkType") as? CheckEmailType
                     ?: CheckEmailType.NONE
@@ -147,7 +146,7 @@ internal fun NavGraphBuilder.loginGraph(
             val email = backStackEntry.arguments?.getString("email") ?: ""
 
             CheckEmailScreen(
-                parentViewModel,
+                authHandler = AuthHandler(),
                 checkEmailType = checkEmailType,
                 email = email,
                 titleStringId = titleId,
@@ -179,21 +178,30 @@ internal fun NavGraphBuilder.loginGraph(
 }
 
 @Composable
-fun LoginFlow(navController: NavHostController) {
+fun LoginFlow(navController: NavHostController, modifier: Modifier = Modifier) {
     var isNavDestinationHome by rememberSaveable { mutableStateOf(true) }
 
     AppScaffold(
+        modifier = modifier,
         isNavHome = isNavDestinationHome,
         onUpButtonClick = { navController.popBackStack() }
     ) {
-        NavHost(
-            navController = navController,
-            startDestination = ROUTE_LOGIN_GRAPH
-        ) {
-            loginGraph(navController,
-                setIsNavHomeIndicator = {
-                    isNavDestinationHome = it
-                })
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = SMALL_SPACING),
+            contentAlignment = Alignment.Center
+        )
+        {
+            NavHost(
+                navController = navController,
+                startDestination = ROUTE_LOGIN_GRAPH
+            ) {
+                loginGraph(navController,
+                    setIsNavHomeIndicator = {
+                        isNavDestinationHome = it
+                    })
+            }
         }
     }
 }

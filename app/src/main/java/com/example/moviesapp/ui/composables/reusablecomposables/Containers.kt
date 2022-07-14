@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.example.moviesapp.ui.constants.MEDIUM_SPACING
-import com.example.moviesapp.ui.constants.SMALL_SPACING
 
 @Composable
 fun AppContentColumn(
@@ -23,21 +22,15 @@ fun AppContentColumn(
             .asPaddingValues()
             .calculateBottomPadding()
     )
-
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = SMALL_SPACING),
-        verticalArrangement = Arrangement.Center,
+            .padding(bottom = bottomPadding)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(contentSpacing ?: MEDIUM_SPACING)
     ) {
-        Column(
-            modifier = Modifier
-                .padding(bottom = bottomPadding)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(contentSpacing ?: MEDIUM_SPACING)
-        ) {
-            content()
-        }
+        content()
     }
 }
+
 

@@ -138,7 +138,7 @@ fun SignUpScreen(
         AppLoginFlowScaffold(
             headerTitle = stringResource(R.string.signup_header_text),
             headerSubtitle = stateHolder.subtitleState.value.ifBlank { stringResource(R.string.signup_header_subtitle_text) },
-            headerSubtitleColor = stateHolder.subtitleColorState.value,
+            isSubtitleError = stateHolder.subtitleColorState.value,
             content = {
                 SignUpTextFields(
                     firstname = stateHolder.firstname,
