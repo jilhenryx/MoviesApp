@@ -4,13 +4,12 @@
     <style name="Theme.MoviesApp" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:colorBackground">@color/dark_gray</item>
+        <item name="android:background">@color/dark_gray</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="Theme.Splash" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:background">@drawable/splash_screen_dark</item>
     </style>

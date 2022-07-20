@@ -33,6 +33,12 @@ fun themedTypography(textColor: Color) = Typography(
         letterSpacing = 0.sp,
         color = textColor,
     ),
+    h5 = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp,
+        letterSpacing = 0.sp,
+        color = textColor,
+    ),
     body1 = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,

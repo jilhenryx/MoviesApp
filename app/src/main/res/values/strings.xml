@@ -40,9 +40,9 @@
 
     <!--Check Email Screen-->
     <string name="check_email_header_text">Check Your Email</string>
-    <string name="check_email_header_subtitle_default_text">A link has been sent to your email address, <em>%1$s</em>. Please check your mailbox and click on the link sent to you.
+    <string name="check_email_header_subtitle_default_text">A link has been sent to your email address, <b>%1$s</b>. Please check your mailbox and click on the link sent to you.
     </string>
-    <string name="confirm_email_header_text">Confirm Email</string>
+    <string name="confirm_email_header_text">One Last Step - Confirm Your Email</string>
     <string name="confirm_email_header_subtitle_text">One last step – you need to verify your email\nA verification link has been sent to your email, <b>%1$s</b>.\nPlease check your mailbox and click on the link
         sent to you.
     </string>
@@ -58,19 +58,18 @@
 
     <!--Forgot Password Screen-->
     <string name="forgot_password_header_text">Forgot Password</string>
-    <string name="forgot_password_header_subtitle_text">
-        To reset your password a password rest link will be
-        sent to your registered email address. Confirm your
-        email address and continue.
-    </string>
+    <string name="forgot_password_header_subtitle_text">To reset your password a password rest link will be sent to your registered email address. Confirm your email address and continue.</string>
 
     <!-- ResetPassword Screen -->
     <string name="reset_password_header_text">Reset Password</string>
-    <string name="rest_password_header_subtitle_text">Please enter a new password for your account,<b>%1$s</b></string>
+    <string name="rest_password_header_subtitle_text">Please enter a new password for your account, <em>%1$s</em></string>
     <string name="confirm_button_text">Confirm</string>
 
     <!--Error Messages-->
     <string name="default_error_message">Oops! Something went wrong. Please try again later</string>
     <string name="default__login_error_message">Unable to Login. The email or password entered is not correct</string>
     <string name="default_sign_up_error_message">Unable to create a new account. The email already exists</string>
+    <string name="email_not_verified_message">Your email is yet to be verified. Click on retry to get a verification link sent to your mailbox</string>
+    <string name="email_does_not_exist_message">This email does not have a registered account</string>
+    <string name="empty_fields_message">Please confirm that no field is empty and you entered the correct details</string>
 </resources>

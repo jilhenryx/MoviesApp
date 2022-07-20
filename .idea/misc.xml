@@ -9,6 +9,7 @@
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/arrow_forward_ios.xml" value="0.1875" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/google_icon.xml" value="0.1" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/ic_baseline_arrow_forward_28.xml" value="0.182" />
+        <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/ic_baseline_play_arrow_48.xml" value="0.15" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/ic_baseline_visibility_24.xml" value="0.122" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/key_icon.xml" value="0.1" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/key_icon_c.xml" value="0.1" />
@@ -18,6 +19,7 @@
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/new_min.xml" value="0.122" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/new_min_2.xml" value="0.122" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/password_reset_icon.xml" value="0.122" />
+        <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/play_arrow.xml" value="0.15" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/question.xml" value="0.122" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/question_icon.xml" value="0.122" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/question_mark_icon.xml" value="0.122" />
@@ -25,6 +27,7 @@
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/splash_screen_drawable_dark.xml" value="0.1875" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/drawable/splash_screen_light.xml" value="0.1875" />
         <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/font/poppins.xml" value="0.2125" />
+        <entry key="..\:/Users/Jil Henry/Documents/Programming/Android/MoviesApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
       </map>
     </option>
   </component>

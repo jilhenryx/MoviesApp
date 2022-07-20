@@ -3,18 +3,12 @@
     android:opacity="opaque">
     <item>
         <!--this is your background, you can use color, gradient etc.-->
-        <color android:color="#111111" />
-        <!--<shape>
-              <gradient
-                   android:angle="315"
-                   android:endColor="#1a82ff"
-                   android:startColor="#2100d3"
-                   android:type="linear"/>
-        </shape> -->
+        <color android:color="@color/dark_gray" />
+
     </item>
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/splashscreen_dark_" />
+
+    <item android:gravity="center">
+        <bitmap android:src="@drawable/splash_image_dark_" />
     </item>
+
 </layer-list>
