@@ -45,7 +45,9 @@ private fun ResetPasswordScreen(
         state = viewModel.state(),
         resetCode = resetCode,
         verifyResetCode = { viewModel.verifyResetCode(resetCode, navigateToLogin) },
-        onTextFieldValueChanged = viewModel::onTextFieldValueChange,
+        onTextFieldValueChanged = { value, fieldType ->
+            viewModel.onTextFieldValueChange(value, fieldType)
+        },
         submit = { viewModel.changePassword(resetCode, navigateToLogin) }
     )
 }

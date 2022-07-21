@@ -1,6 +1,5 @@
 package com.example.moviesapp.ui.signup
 
-import com.example.moviesapp.ui.reusablecomposables.AuthAppBar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -52,7 +51,9 @@ private fun SignUpScreen(
         navigateToLogin = navigateToLogin,
         navigateUp = navigateUp,
         onSignUpClicked = { viewModel.signUp(navigateToCheckEmail) },
-        onTextFieldValueChange = viewModel::onTextFieldValueChange
+        onTextFieldValueChange = { value, fieldType ->
+            viewModel.onTextFieldValueChange(value, fieldType)
+        }
     )
 
 }

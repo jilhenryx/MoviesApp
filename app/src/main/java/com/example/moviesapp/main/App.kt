@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.main.navigation.AppNavigation
 import com.example.moviesapp.main.navigation.NavGraph
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun App(isDarkMode: Boolean, isFirstLaunch: Boolean) {
@@ -26,6 +28,7 @@ fun App(isDarkMode: Boolean, isFirstLaunch: Boolean) {
         AppNavigation(
             modifier = Modifier.navigationBarsPadding(),
             navController = navController,
-            startDestination = NavGraph.AuthGraph.route)
+            startDestination = if (Firebase.auth.currentUser != null) NavGraph.MainGraph.route else NavGraph.AuthGraph.route
+        )
     }
 }

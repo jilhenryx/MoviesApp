@@ -1,6 +1,5 @@
 package com.example.moviesapp.ui.forgotpassword
 
-import com.example.moviesapp.ui.reusablecomposables.AuthAppBar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -47,7 +46,7 @@ private fun ForgotPasswordScreen(
         email = email,
         submit = { viewModel.submit(navigateToCheckEmail) },
         navigateUp = navigateUp,
-        onTextFieldValueChanged = viewModel::onTextFieldValueChanged
+        onTextFieldValueChanged = { viewModel.onTextFieldValueChanged(it) }
     )
 
 }

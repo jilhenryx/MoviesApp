@@ -1,6 +1,5 @@
 package com.example.moviesapp.ui.login
 
-import com.example.moviesapp.ui.reusablecomposables.AuthAppBar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -56,7 +55,9 @@ private fun LoginScreen(
         state = viewModel.state,
         navigateToSignUp = navigateToSignUp,
         navigateToForgotPassword = navigateToForgotPassword,
-        onTextFieldValueChanged = viewModel::onTextFieldValueChange,
+        onTextFieldValueChanged = { value, fieldType ->
+            viewModel.onTextFieldValueChange(value, fieldType)
+        },
         onLoginButtonClicked = { viewModel.login(navigateToMain, navigateToCheckEmail) },
         onGoogleSignIn = {}
     )
