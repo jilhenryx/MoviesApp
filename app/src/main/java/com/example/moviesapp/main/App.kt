@@ -1,5 +1,6 @@
 package com.example.moviesapp.main
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,12 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.moviesapp.main.navigation.AppNavigation
 import com.example.moviesapp.main.navigation.NavGraph
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun App(isDarkMode: Boolean, isFirstLaunch: Boolean) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     var isLaunching by rememberSaveable { mutableStateOf(isFirstLaunch) }
 
     if (isLaunching) {

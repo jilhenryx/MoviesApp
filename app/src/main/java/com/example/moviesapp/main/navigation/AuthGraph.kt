@@ -1,9 +1,12 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.example.moviesapp.main.navigation
 
 import android.content.Intent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.*
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
 import com.example.moviesapp.core.AuthEmailType
 import com.example.moviesapp.main.navigation.AuthGraphCallerIds.LOGIN_SCREEN_ID
 import com.example.moviesapp.main.navigation.AuthGraphCallerIds.SIGN_UP_SCREEN_ID
@@ -96,13 +99,6 @@ private fun NavGraphBuilder.addLoginScreen(
 private fun NavGraphBuilder.addSignUpScreen(navController: NavHostController) {
     composable(route = AuthScreen.SignUp.route) {
         SignUpScreen(
-            navigateToLogin = {
-                navController.navigate(route = AuthScreen.Login.route) {
-                    popUpTo(route = AuthScreen.Login.route) {
-                        inclusive = true
-                    }
-                }
-            },
             navigateToCheckEmail = {
                 navController.navigate(
                     route = AuthScreen.CheckEmail.createRouteId(

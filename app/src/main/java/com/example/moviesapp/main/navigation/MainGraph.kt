@@ -1,10 +1,12 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.example.moviesapp.main.navigation
 
-import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
 import com.example.moviesapp.ui.home.HomeScreen
 
 
@@ -19,11 +21,11 @@ internal fun NavGraphBuilder.addMainGraph(
     navController: NavHostController,
 ) {
     navigation(startDestination = MainScreen.Home.route, route = NavGraph.MainGraph.route) {
-        addMainScreen(navController)
+        addHomeScreen(navController)
     }
 }
 
-private fun NavGraphBuilder.addMainScreen(navController: NavHostController) {
+private fun NavGraphBuilder.addHomeScreen(navController: NavHostController) {
     composable(route = MainScreen.Home.route) {
         HomeScreen()
     }

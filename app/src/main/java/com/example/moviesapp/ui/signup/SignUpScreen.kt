@@ -25,13 +25,11 @@ import com.example.moviesapp.ui.reusablecomposables.*
 
 @Composable
 fun SignUpScreen(
-    navigateToLogin: () -> Unit,
     navigateToCheckEmail: (email: String) -> Unit,
     navigateUp: () -> Unit
 ) {
     SignUpScreen(
         viewModel = hiltViewModel(),
-        navigateToLogin = navigateToLogin,
         navigateToCheckEmail = navigateToCheckEmail,
         navigateUp = navigateUp
     )
@@ -41,14 +39,12 @@ fun SignUpScreen(
 private fun SignUpScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel,
-    navigateToLogin: () -> Unit,
     navigateToCheckEmail: (email: String) -> Unit,
     navigateUp: () -> Unit
 ) {
     SignUpScreen(
         modifier = modifier,
         state = viewModel.state,
-        navigateToLogin = navigateToLogin,
         navigateUp = navigateUp,
         onSignUpClicked = { viewModel.signUp(navigateToCheckEmail) },
         onTextFieldValueChange = { value, fieldType ->
@@ -62,7 +58,6 @@ private fun SignUpScreen(
 private fun SignUpScreen(
     modifier: Modifier = Modifier,
     state: SignUpStateHandler.SignUpStateHolder,
-    navigateToLogin: () -> Unit,
     navigateUp: () -> Unit,
     onSignUpClicked: () -> Unit,
     onTextFieldValueChange: (value: String, fieldType: TextFieldType) -> Unit
@@ -123,7 +118,7 @@ private fun SignUpScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = stringResource(R.string.signup_footer_text),
                     link = stringResource(R.string.signup_footer_link_text),
-                    onLinkCLick = navigateToLogin
+                    onLinkCLick = navigateUp
                 )
             }
 
