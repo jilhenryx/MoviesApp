@@ -1,5 +1,7 @@
 package com.example.moviesapp.ui.login
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -8,14 +10,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -26,6 +26,9 @@ import com.example.moviesapp.ui.composablehelpers.ComposeConstants.MEDIUM_SPACIN
 import com.example.moviesapp.ui.composablehelpers.ComposeConstants.SMALL_SPACING
 import com.example.moviesapp.ui.composablehelpers.isFieldCorrect
 import com.example.moviesapp.ui.reusablecomposables.*
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.common.api.ApiException
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -58,8 +61,12 @@ private fun LoginScreen(
         onTextFieldValueChanged = { value, fieldType ->
             viewModel.onTextFieldValueChange(value, fieldType)
         },
+        autoPopulate = { email, password ->
+            viewModel.onTextFieldValueChange(email, TextFieldType.EMAIL)
+            viewModel.onTextFieldValueChange(password, TextFieldType.PASSWORD)
+        },
         onLoginButtonClicked = { viewModel.login(navigateToMain, navigateToCheckEmail) },
-        onGoogleSignIn = {}
+        onGoogleSignIn = { viewModel.signInWithGoogle(it) }
     )
 
 }
@@ -71,11 +78,31 @@ private fun LoginScreen(
     navigateToSignUp: () -> Unit,
     navigateToForgotPassword: (email: String) -> Unit,
     onTextFieldValueChanged: (value: String, fieldType: TextFieldType) -> Unit,
+    autoPopulate: (email: String, password: String) -> Unit,
     onLoginButtonClicked: () -> Unit,
-    onGoogleSignIn: () -> Unit
+    onGoogleSignIn: (idToken: String) -> Unit
 ) {
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+    val oneTapClient = remember { Identity.getSignInClient(context) }
+    val resultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { oneTapResult ->
+        try {
+            val credential = oneTapClient.getSignInCredentialFromIntent(oneTapResult.data)
+            // Auto-populating text fields if user has saved credentials to mimics autofill
+            credential.googleIdToken?.let(onGoogleSignIn) ?: autoPopulate(
+                credential.id,
+                credential.password ?: ""
+            )
+        } catch (error: ApiException) {
+            // Empty String Indicates to the ViewModel that there was a Google
+            // signIn error so it can update the stateHandler appropriately
+            onGoogleSignIn("")
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -120,7 +147,15 @@ private fun LoginScreen(
                     },
                     onGoogleLoginCLicked = {
                         focusManager.clearFocus()
-                        onGoogleSignIn()
+                        coroutineScope.launch {
+                            GoogleOneTapHandler.loginWithGoogle(
+                                resultLauncher,
+                                oneTapClient
+                            ).collect {
+                                onGoogleSignIn("")
+                            }
+                        }
+
                     }
                 )
 

@@ -8,6 +8,8 @@ object ComposeConstants {
     internal val MEDIUM_SPACING = 32.dp
     internal val LARGE_SPACING = 50.dp
     internal val SMALL_TEXT_STYLE_SIZE = 18.sp
+
+    internal const val ONE_TAP_REQ_CODE = 100
 }
 
 

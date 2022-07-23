@@ -10,10 +10,7 @@ import com.example.moviesapp.network.authentication.AuthConstants.DEEP_LINK_MODE
 import com.example.moviesapp.network.authentication.AuthConstants.EMAIL_QUERY_KEY
 import com.example.moviesapp.network.authentication.AuthConstants.RESET_PASSWORD_URL_PATH
 import com.example.moviesapp.network.authentication.AuthConstants.VERIFY_EMAIL_URL_PATH
-import com.google.firebase.auth.ActionCodeSettings
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
@@ -82,6 +79,11 @@ class AuthHandler @Inject constructor() {
         awaitClose {
             channel.close()
         }
+    }
+
+    internal fun loginWithGoogle(idToken: String) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        // TODO: Verify if user exist and what happens on collision before you implement
     }
 
 

@@ -2,6 +2,7 @@ package com.example.moviesapp.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviesapp.core.Messages
 import com.example.moviesapp.domain.usecases.LoginUser
 import com.example.moviesapp.ui.composablehelpers.isFieldCorrect
 import com.example.moviesapp.ui.reusablecomposables.TextFieldType
@@ -31,7 +32,7 @@ class LoginViewModel @Inject constructor(
         navigateToCheckEmail: (email: String) -> Unit
     ) {
         if (!areAllFieldsCorrect()) {
-            stateHandler.handleInvalidSubmission()
+            stateHandler.handleInvalidSubmission(Messages.EMPTY_FIELDS_MESSAGE)
         } else {
             viewModelScope.launch {
                 loginUser(
@@ -45,6 +46,14 @@ class LoginViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    internal fun signInWithGoogle(idToken: String) {
+        if(idToken.isBlank()){
+            stateHandler.handleInvalidSubmission(Messages.GOOGLE_SIGN_IN_ERROR_MESSAGE)
+        }else{
+            // TODO: Call Interactor
         }
     }
 }

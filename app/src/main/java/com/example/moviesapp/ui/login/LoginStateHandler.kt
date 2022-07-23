@@ -26,8 +26,8 @@ class LoginStateHandler  @Inject constructor() {
         private const val TAG = "LoginStateHandler"
     }
 
-    internal fun handleInvalidSubmission() {
-        subtitleState.value = SubtitleHeaderState(EMPTY_FIELDS_MESSAGE, true)
+    internal fun handleInvalidSubmission(errorMessage:String) {
+        subtitleState.value = SubtitleHeaderState(errorMessage  , true)
     }
 
     internal fun onTextFieldValueChange(value: String, fieldType: TextFieldType) {
