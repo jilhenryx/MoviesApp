@@ -8,6 +8,7 @@ object Messages {
         "Unable to Login. The email or password entered is not correct"
     internal const val DEFAULT_SIGN_UP_ERROR_MESSAGE =
         "Unable to create a new account. The email already exists"
+    internal const val INVALID_EMAIL = "Email is Invalid"
     internal const val EMAIL_NOT_VERIFIED_MESSAGE =
         "Your email is yet to be verified. Click on retry to get a verification link sent to your mailbox"
     internal const val EMAIL_DOES_NOT_EXIST_MESSAGE =

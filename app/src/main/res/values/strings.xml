@@ -26,7 +26,7 @@
     <string name="login_subtitle_text">Please login to access your account and the app\'s content</string>
     <string name="login_forgot_password_text">Forgot Password?</string>
     <string name="login_button_text">@string/login_header_text</string>
-    <string name="login_google_button_text">Sign in with Google</string>
+    <string name="login_google_button_text">Continue with Google</string>
     <string name="login_alt_sign_in_text">or</string>
     <string name="login_footer_text">Don\'t have an account?</string>
     <string name="login_footer_link_text">@string/signup_header_text</string>

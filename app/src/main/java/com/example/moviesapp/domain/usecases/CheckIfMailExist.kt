@@ -1,7 +1,7 @@
 package com.example.moviesapp.domain.usecases
 
 import com.example.moviesapp.core.AuthStatusWithValue
-import com.example.moviesapp.data.EmailVerificationRepository
+import com.example.moviesapp.data.repositories.EmailVerificationRepository
 import com.example.moviesapp.domain.AuthInteractor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

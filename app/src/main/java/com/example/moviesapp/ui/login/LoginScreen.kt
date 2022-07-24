@@ -66,7 +66,7 @@ private fun LoginScreen(
             viewModel.onTextFieldValueChange(password, TextFieldType.PASSWORD)
         },
         onLoginButtonClicked = { viewModel.login(navigateToMain, navigateToCheckEmail) },
-        onGoogleSignIn = { viewModel.signInWithGoogle(it) }
+        onGoogleSignIn = { viewModel.signInWithGoogle(it, navigateToMain) }
     )
 
 }
@@ -98,6 +98,7 @@ private fun LoginScreen(
                 credential.password ?: ""
             )
         } catch (error: ApiException) {
+            // TODO: Check error status code for Firebase Analytics
             // Empty String Indicates to the ViewModel that there was a Google
             // signIn error so it can update the stateHandler appropriately
             onGoogleSignIn("")

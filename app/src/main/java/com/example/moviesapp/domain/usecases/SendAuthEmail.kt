@@ -2,7 +2,7 @@ package com.example.moviesapp.domain.usecases
 
 import com.example.moviesapp.core.AuthEmailType
 import com.example.moviesapp.core.AuthStatus
-import com.example.moviesapp.data.SendAuthEmailRepository
+import com.example.moviesapp.data.repositories.SendAuthEmailRepository
 import com.example.moviesapp.domain.AuthInteractor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

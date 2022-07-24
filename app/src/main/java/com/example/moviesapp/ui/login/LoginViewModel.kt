@@ -1,9 +1,11 @@
 package com.example.moviesapp.ui.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviesapp.core.Messages
 import com.example.moviesapp.domain.usecases.LoginUser
+import com.example.moviesapp.domain.usecases.LoginWithGoogle
 import com.example.moviesapp.ui.composablehelpers.isFieldCorrect
 import com.example.moviesapp.ui.reusablecomposables.TextFieldType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,6 +16,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val stateHandler: LoginStateHandler,
     private val loginUser: LoginUser,
+    private val googleLogin: LoginWithGoogle,
 ) : ViewModel() {
 
     internal val state = stateHandler.LoginStateHolder()
@@ -49,11 +52,16 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    internal fun signInWithGoogle(idToken: String) {
-        if(idToken.isBlank()){
+    internal fun signInWithGoogle(idToken: String, navigateToMain: () -> Unit) {
+        if (idToken.isBlank()) {
             stateHandler.handleInvalidSubmission(Messages.GOOGLE_SIGN_IN_ERROR_MESSAGE)
-        }else{
-            // TODO: Call Interactor
+        } else {
+            Log.d("LoginViewModel", "signInWithGoogle: Token: $idToken")
+            viewModelScope.launch {
+                googleLogin(LoginWithGoogle.Params(idToken = idToken)).collect {
+                    stateHandler.handleGoogleLogin(it, navigateToMain)
+                }
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ import com.google.accompanist.navigation.animation.navigation
 import com.example.moviesapp.core.AuthEmailType
 import com.example.moviesapp.main.navigation.AuthGraphCallerIds.LOGIN_SCREEN_ID
 import com.example.moviesapp.main.navigation.AuthGraphCallerIds.SIGN_UP_SCREEN_ID
-import com.example.moviesapp.network.authentication.AuthConstants
+import com.example.moviesapp.data.network.authentication.AuthConstants
 import com.example.moviesapp.ui.checkemail.CheckEmailScreen
 import com.example.moviesapp.ui.forgotpassword.ForgotPasswordScreen
 import com.example.moviesapp.ui.login.LoginScreen

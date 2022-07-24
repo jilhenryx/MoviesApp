@@ -1,4 +1,4 @@
-package com.example.moviesapp.network.authentication
+package com.example.moviesapp.data.network.authentication
 
 
 object AuthConstants {

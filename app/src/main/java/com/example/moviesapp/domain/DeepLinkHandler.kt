@@ -3,10 +3,10 @@ package com.example.moviesapp.domain
 import android.net.Uri
 import com.example.moviesapp.core.AuthEmailType
 import com.example.moviesapp.domain.usecases.AuthDeepLinkData
-import com.example.moviesapp.network.authentication.AuthConstants.DEEP_LINK_MODE_QUERY_KEY
-import com.example.moviesapp.network.authentication.AuthConstants.DEEP_LINK_MODE_RESET_PASSWORD
-import com.example.moviesapp.network.authentication.AuthConstants.DEEP_LINK_MODE_VERIFY_EMAIL
-import com.example.moviesapp.network.authentication.AuthConstants.EMAIL_QUERY_KEY
+import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_QUERY_KEY
+import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_RESET_PASSWORD
+import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_VERIFY_EMAIL
+import com.example.moviesapp.data.network.authentication.AuthConstants.EMAIL_QUERY_KEY
 import javax.inject.Inject
 
 class DeepLinkHandler @Inject constructor() {

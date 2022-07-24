@@ -1,7 +1,7 @@
 package com.example.moviesapp.domain.usecases
 
 import com.example.moviesapp.core.AuthStatus
-import com.example.moviesapp.data.SignUpRepository
+import com.example.moviesapp.data.repositories.SignUpRepository
 import com.example.moviesapp.domain.AuthInteractor
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

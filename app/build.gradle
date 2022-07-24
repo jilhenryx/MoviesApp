@@ -22,11 +22,14 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
+        oneTapClientID
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField("String", "ONE_TAP_CLIENT_ID", oneTapClientID)
     }
 
     buildTypes {
@@ -46,7 +49,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion =  "1.2.0"
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
     packagingOptions {
         resources {

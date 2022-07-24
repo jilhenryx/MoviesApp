@@ -1,15 +1,17 @@
-package com.example.moviesapp.network.authentication
+package com.example.moviesapp.data.network.authentication
 
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.util.Log
 import com.example.moviesapp.core.Messages.DEFAULT_ERROR_MESSAGE
 import com.example.moviesapp.core.Messages.DEFAULT_LOGIN_ERROR_MESSAGE
 import com.example.moviesapp.core.Messages.DEFAULT_SIGN_UP_ERROR_MESSAGE
-import com.example.moviesapp.network.authentication.AuthConstants.DEEP_LINK_MODE_QUERY_KEY
-import com.example.moviesapp.network.authentication.AuthConstants.DEEP_LINK_MODE_VERIFY_EMAIL
-import com.example.moviesapp.network.authentication.AuthConstants.EMAIL_QUERY_KEY
-import com.example.moviesapp.network.authentication.AuthConstants.RESET_PASSWORD_URL_PATH
-import com.example.moviesapp.network.authentication.AuthConstants.VERIFY_EMAIL_URL_PATH
+import com.example.moviesapp.core.Messages.GOOGLE_SIGN_IN_ERROR_MESSAGE
+import com.example.moviesapp.core.Messages.INVALID_EMAIL
+import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_QUERY_KEY
+import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_VERIFY_EMAIL
+import com.example.moviesapp.data.network.authentication.AuthConstants.EMAIL_QUERY_KEY
+import com.example.moviesapp.data.network.authentication.AuthConstants.RESET_PASSWORD_URL_PATH
+import com.example.moviesapp.data.network.authentication.AuthConstants.VERIFY_EMAIL_URL_PATH
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
@@ -73,7 +75,7 @@ class AuthHandler @Inject constructor() {
                 }
         } catch (exception: Exception) {
             Log.d(TAG, "login: Exception Caught: ", exception)
-            send(AuthResult.onError(exception.message ?: DEFAULT_ERROR_MESSAGE))
+            send(AuthResult.onError(DEFAULT_ERROR_MESSAGE))
             close()
         }
         awaitClose {
@@ -81,9 +83,46 @@ class AuthHandler @Inject constructor() {
         }
     }
 
-    internal fun loginWithGoogle(idToken: String) {
-        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
-        // TODO: Verify if user exist and what happens on collision before you implement
+    internal fun loginWithGoogle(idToken: String) = callbackFlow<AuthResult> {
+        send(AuthResult.onLoad())
+        val googleCredential = GoogleAuthProvider.getCredential(idToken, null)
+
+        //SignOut if User already exist
+        firebaseAuth.signOut()
+
+        try {
+            firebaseAuth.signInWithCredential(googleCredential)
+                .addOnSuccessListener {
+                    Log.d(TAG, "loginWithGoogle: User Logged In")
+                    trySend(AuthResult.onSuccess()).also {
+                        authHandlerLogger("login", it)
+                    }
+                    close()
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "loginWithGoogle: Failed", exception)
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthUserCollisionException -> {
+                            exception.localizedMessage ?: DEFAULT_SIGN_UP_ERROR_MESSAGE
+                        }
+                        else -> {
+                            exception.localizedMessage ?: GOOGLE_SIGN_IN_ERROR_MESSAGE
+                        }
+                    }
+                    trySend(AuthResult.onError(errorMessage)).also {
+                        authHandlerLogger("loginWithGoogle", it)
+                    }
+                    close()
+                }
+        } catch (exception: Exception) {
+            Log.d(TAG, "loginWithGoogle: Exception Caught: ", exception)
+            send(AuthResult.onError(GOOGLE_SIGN_IN_ERROR_MESSAGE))
+            close()
+        }
+
+        awaitClose {
+            channel.close()
+        }
     }
 
 
@@ -125,7 +164,7 @@ class AuthHandler @Inject constructor() {
                             exception.message ?: DEFAULT_SIGN_UP_ERROR_MESSAGE
                         }
                         is FirebaseAuthInvalidCredentialsException -> {
-                            exception.message ?: "Email is Invalid"
+                            exception.message ?: INVALID_EMAIL
                         }
                         else -> {
                             exception.message ?: DEFAULT_ERROR_MESSAGE
@@ -138,7 +177,7 @@ class AuthHandler @Inject constructor() {
                 }
         } catch (exception: Exception) {
             Log.d(TAG, "createUser: Exception Caught: ", exception)
-            send(AuthResult.onError(exception.message ?: DEFAULT_ERROR_MESSAGE))
+            send(AuthResult.onError(DEFAULT_ERROR_MESSAGE))
             close()
         }
         awaitClose {

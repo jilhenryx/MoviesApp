@@ -2,14 +2,15 @@ package com.example.moviesapp.ui.login
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import com.example.moviesapp.core.AuthStatus
 import com.example.moviesapp.core.AuthStatusWithValue
 import com.example.moviesapp.core.Messages.DEFAULT_ERROR_MESSAGE
-import com.example.moviesapp.core.Messages.EMPTY_FIELDS_MESSAGE
+import com.example.moviesapp.core.Messages.GOOGLE_SIGN_IN_ERROR_MESSAGE
 import com.example.moviesapp.ui.composablehelpers.SubtitleHeaderState
 import com.example.moviesapp.ui.reusablecomposables.TextFieldType
 import javax.inject.Inject
 
-class LoginStateHandler  @Inject constructor() {
+class LoginStateHandler @Inject constructor() {
     private val emailState = mutableStateOf("")
     private val passwordState = mutableStateOf("")
     private val subtitleState = mutableStateOf(SubtitleHeaderState("", false))
@@ -26,8 +27,8 @@ class LoginStateHandler  @Inject constructor() {
         private const val TAG = "LoginStateHandler"
     }
 
-    internal fun handleInvalidSubmission(errorMessage:String) {
-        subtitleState.value = SubtitleHeaderState(errorMessage  , true)
+    internal fun handleInvalidSubmission(errorMessage: String) {
+        subtitleState.value = SubtitleHeaderState(errorMessage, true)
     }
 
     internal fun onTextFieldValueChange(value: String, fieldType: TextFieldType) {
@@ -58,6 +59,23 @@ class LoginStateHandler  @Inject constructor() {
             is AuthStatusWithValue.Failed -> {
                 subtitleState.value = SubtitleHeaderState(
                     loginStatus.errorMessage.ifBlank { DEFAULT_ERROR_MESSAGE },
+                    true
+                )
+                isLoadingState.value = false
+            }
+        }
+    }
+
+    internal fun handleGoogleLogin(authStatus: AuthStatus, navigateToMain: () -> Unit) {
+        when (authStatus) {
+            is AuthStatus.InProgress -> {}
+            is AuthStatus.Success -> {
+                isLoadingState.value = false
+                navigateToMain()
+            }
+            is AuthStatus.Failed -> {
+                subtitleState.value = SubtitleHeaderState(
+                    authStatus.errorMessage.ifBlank { GOOGLE_SIGN_IN_ERROR_MESSAGE },
                     true
                 )
                 isLoadingState.value = false
