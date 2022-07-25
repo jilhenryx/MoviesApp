@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moviesapp.R
@@ -41,7 +40,6 @@ private fun HomeScreen(
     modifier: Modifier = Modifier,
     state: HomeStateHandler.StateHolder,
 ) {
-    val density = LocalDensity.current
     var startAnim by remember { mutableStateOf(true) }
     var textInitialAlpha by remember { mutableStateOf(0f) }
     var steamInitialAlpha by remember { mutableStateOf(1f) }
