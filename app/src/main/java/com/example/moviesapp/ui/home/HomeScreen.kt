@@ -20,18 +20,21 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navigateToLogin: () -> Unit) {
     HomeScreen(
-        viewModel = hiltViewModel()
+        viewModel = hiltViewModel(),
+        navigateToLogin = navigateToLogin
     )
 }
 
 @Composable
 private fun HomeScreen(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    navigateToLogin: () -> Unit
 ) {
     HomeScreen(
         state = viewModel.state,
+        navigateToLogin = navigateToLogin
     )
 }
 
@@ -39,6 +42,7 @@ private fun HomeScreen(
 private fun HomeScreen(
     modifier: Modifier = Modifier,
     state: HomeStateHandler.StateHolder,
+    navigateToLogin: () -> Unit
 ) {
     var startAnim by remember { mutableStateOf(true) }
     var textInitialAlpha by remember { mutableStateOf(0f) }
@@ -120,7 +124,10 @@ private fun HomeScreen(
             Text(
                 modifier = Modifier
                     .alpha(textAnimatedAlpha)
-                    .clickable { Firebase.auth.signOut() },
+                    .clickable {
+                        Firebase.auth.signOut()
+                        navigateToLogin()
+                    },
                 text = "Something's cooking......."
             )
         }

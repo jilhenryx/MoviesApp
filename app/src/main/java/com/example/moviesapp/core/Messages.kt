@@ -6,6 +6,8 @@ object Messages {
         "Please confirm that no field is empty and you entered the correct details"
     internal const val DEFAULT_LOGIN_ERROR_MESSAGE =
         "Unable to Login. The email or password entered is not correct"
+    internal const val LOGIN_ERROR_NO_USER_FOUND_MESSAGE =
+        "Unable to Login. The email entered is not registered. Create an account to proceed"
     internal const val DEFAULT_SIGN_UP_ERROR_MESSAGE =
         "Unable to create a new account. The email already exists"
     internal const val INVALID_EMAIL = "Email is Invalid"

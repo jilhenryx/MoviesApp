@@ -7,6 +7,7 @@ import com.example.moviesapp.core.Messages.DEFAULT_LOGIN_ERROR_MESSAGE
 import com.example.moviesapp.core.Messages.DEFAULT_SIGN_UP_ERROR_MESSAGE
 import com.example.moviesapp.core.Messages.GOOGLE_SIGN_IN_ERROR_MESSAGE
 import com.example.moviesapp.core.Messages.INVALID_EMAIL
+import com.example.moviesapp.core.Messages.LOGIN_ERROR_NO_USER_FOUND_MESSAGE
 import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_QUERY_KEY
 import com.example.moviesapp.data.network.authentication.AuthConstants.DEEP_LINK_MODE_VERIFY_EMAIL
 import com.example.moviesapp.data.network.authentication.AuthConstants.EMAIL_QUERY_KEY
@@ -63,10 +64,10 @@ class AuthHandler @Inject constructor() {
                 .addOnFailureListener { exception ->
                     Log.d(TAG, "login: Login Failed: ", exception)
                     val errorMessage =
-                        if (exception is FirebaseAuthInvalidCredentialsException) {
-                            exception.message ?: DEFAULT_LOGIN_ERROR_MESSAGE
-                        } else {
-                            exception.message ?: DEFAULT_ERROR_MESSAGE
+                        when (exception) {
+                            is FirebaseAuthInvalidCredentialsException -> DEFAULT_LOGIN_ERROR_MESSAGE
+                            is FirebaseAuthInvalidUserException -> LOGIN_ERROR_NO_USER_FOUND_MESSAGE
+                            else -> DEFAULT_ERROR_MESSAGE
                         }
                     trySend(AuthResult.onError(errorMessage)).also {
                         authHandlerLogger("login", it)
@@ -103,10 +104,10 @@ class AuthHandler @Inject constructor() {
                     Log.d(TAG, "loginWithGoogle: Failed", exception)
                     val errorMessage = when (exception) {
                         is FirebaseAuthUserCollisionException -> {
-                            exception.localizedMessage ?: DEFAULT_SIGN_UP_ERROR_MESSAGE
+                            DEFAULT_SIGN_UP_ERROR_MESSAGE
                         }
                         else -> {
-                            exception.localizedMessage ?: GOOGLE_SIGN_IN_ERROR_MESSAGE
+                            GOOGLE_SIGN_IN_ERROR_MESSAGE
                         }
                     }
                     trySend(AuthResult.onError(errorMessage)).also {
@@ -161,13 +162,13 @@ class AuthHandler @Inject constructor() {
                     Log.d(TAG, "createUser: Create User Failed", exception)
                     val errorMessage = when (exception) {
                         is FirebaseAuthUserCollisionException -> {
-                            exception.message ?: DEFAULT_SIGN_UP_ERROR_MESSAGE
+                            DEFAULT_SIGN_UP_ERROR_MESSAGE
                         }
                         is FirebaseAuthInvalidCredentialsException -> {
-                            exception.message ?: INVALID_EMAIL
+                            INVALID_EMAIL
                         }
                         else -> {
-                            exception.message ?: DEFAULT_ERROR_MESSAGE
+                            DEFAULT_ERROR_MESSAGE
                         }
                     }
                     trySend(AuthResult.onError(errorMessage)).also {
@@ -219,7 +220,7 @@ class AuthHandler @Inject constructor() {
                             Log.d(TAG, "sendVerificationEmail: Failed", exception)
                             trySend(
                                 AuthResult.onError(
-                                    exception.message ?: DEFAULT_ERROR_MESSAGE
+                                    DEFAULT_ERROR_MESSAGE
                                 )
                             ).also {
                                 authHandlerLogger("sendVerificationEmail", it)
@@ -307,7 +308,7 @@ class AuthHandler @Inject constructor() {
                     .addOnFailureListener { exception ->
                         Log.d(TAG, "verifyRestPasswordCode: Failed", exception)
                         trySend(
-                            AuthResultWithValue.onError(exception.message ?: DEFAULT_ERROR_MESSAGE)
+                            AuthResultWithValue.onError(DEFAULT_ERROR_MESSAGE)
                         ).also { authHandlerLogger("resetPassword", it) }
                         close()
                     }
@@ -338,7 +339,7 @@ class AuthHandler @Inject constructor() {
                     }
                     .addOnFailureListener { exception ->
                         Log.d(TAG, "resetPassword: Reset Password Failed", exception)
-                        trySend(AuthResult.onError(exception.message ?: DEFAULT_ERROR_MESSAGE))
+                        trySend(AuthResult.onError(DEFAULT_ERROR_MESSAGE))
                             .also { authHandlerLogger("resetPassword", it) }
                         close()
                     }
@@ -406,9 +407,10 @@ class AuthHandler @Inject constructor() {
                         }
                     }
                     .addOnFailureListener { exception ->
+                        Log.d(TAG, "confirmEmailVerification: Failed", exception)
                         trySend(
                             AuthResultWithValue.onError<Boolean>(
-                                exception.message ?: DEFAULT_ERROR_MESSAGE
+                                DEFAULT_ERROR_MESSAGE
                             )
                         ).also {
                             authHandlerLogger("confirmEmailVerification", it)
@@ -418,7 +420,7 @@ class AuthHandler @Inject constructor() {
             }
         } catch (exception: Exception) {
             Log.d(TAG, "confirmEmailVerification: Exception Caught: ", exception)
-            send(AuthResultWithValue.onError(exception.localizedMessage ?: DEFAULT_ERROR_MESSAGE))
+            send(AuthResultWithValue.onError(DEFAULT_ERROR_MESSAGE))
             close()
         }
         awaitClose {
