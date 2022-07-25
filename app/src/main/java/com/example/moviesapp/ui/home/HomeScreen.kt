@@ -16,6 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composablehelpers.ComposeConstants
 import com.example.moviesapp.ui.reusablecomposables.AuthAppBar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 
 @Composable
@@ -116,8 +118,11 @@ private fun HomeScreen(
 
             Spacer(modifier = Modifier.height(ComposeConstants.MEDIUM_SPACING))
 
+            //Intentional call of data layer here
             Text(
-                modifier = Modifier.alpha(textAnimatedAlpha),
+                modifier = Modifier
+                    .alpha(textAnimatedAlpha)
+                    .clickable { Firebase.auth.signOut() },
                 text = "Something's cooking......."
             )
         }

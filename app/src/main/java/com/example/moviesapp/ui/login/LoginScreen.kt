@@ -61,10 +61,6 @@ private fun LoginScreen(
         onTextFieldValueChanged = { value, fieldType ->
             viewModel.onTextFieldValueChange(value, fieldType)
         },
-        autoPopulate = { email, password ->
-            viewModel.onTextFieldValueChange(email, TextFieldType.EMAIL)
-            viewModel.onTextFieldValueChange(password, TextFieldType.PASSWORD)
-        },
         onLoginButtonClicked = { viewModel.login(navigateToMain, navigateToCheckEmail) },
         onGoogleSignIn = { viewModel.signInWithGoogle(it, navigateToMain) }
     )
@@ -78,7 +74,6 @@ private fun LoginScreen(
     navigateToSignUp: () -> Unit,
     navigateToForgotPassword: (email: String) -> Unit,
     onTextFieldValueChanged: (value: String, fieldType: TextFieldType) -> Unit,
-    autoPopulate: (email: String, password: String) -> Unit,
     onLoginButtonClicked: () -> Unit,
     onGoogleSignIn: (idToken: String) -> Unit
 ) {
@@ -93,10 +88,7 @@ private fun LoginScreen(
         try {
             val credential = oneTapClient.getSignInCredentialFromIntent(oneTapResult.data)
             // Auto-populating text fields if user has saved credentials to mimics autofill
-            credential.googleIdToken?.let(onGoogleSignIn) ?: autoPopulate(
-                credential.id,
-                credential.password ?: ""
-            )
+            credential.googleIdToken?.let(onGoogleSignIn) ?: onGoogleSignIn("")
         } catch (error: ApiException) {
             // TODO: Check error status code for Firebase Analytics
             // Empty String Indicates to the ViewModel that there was a Google
