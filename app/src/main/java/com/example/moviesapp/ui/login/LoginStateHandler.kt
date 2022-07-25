@@ -29,6 +29,7 @@ class LoginStateHandler @Inject constructor() {
 
     internal fun handleInvalidSubmission(errorMessage: String) {
         subtitleState.value = SubtitleHeaderState(errorMessage, true)
+        isLoadingState.value = false
     }
 
     internal fun onTextFieldValueChange(value: String, fieldType: TextFieldType) {
@@ -68,7 +69,9 @@ class LoginStateHandler @Inject constructor() {
 
     internal fun handleGoogleLogin(authStatus: AuthStatus, navigateToMain: () -> Unit) {
         when (authStatus) {
-            is AuthStatus.InProgress -> {}
+            is AuthStatus.InProgress -> {
+                isLoadingState.value = true
+            }
             is AuthStatus.Success -> {
                 isLoadingState.value = false
                 navigateToMain()
@@ -90,7 +93,10 @@ class LoginStateHandler @Inject constructor() {
             get() = passwordState.value
         internal val subtitle
             get() = subtitleState.value
-        internal val isLoading
+        internal var isLoading
             get() = isLoadingState.value
+            set(value) {
+                isLoadingState.value = value
+            }
     }
 }

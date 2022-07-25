@@ -56,7 +56,6 @@ class LoginViewModel @Inject constructor(
         if (idToken.isBlank()) {
             stateHandler.handleInvalidSubmission(Messages.GOOGLE_SIGN_IN_ERROR_MESSAGE)
         } else {
-            Log.d("LoginViewModel", "signInWithGoogle: Token: $idToken")
             viewModelScope.launch {
                 googleLogin(LoginWithGoogle.Params(idToken = idToken)).collect {
                     stateHandler.handleGoogleLogin(it, navigateToMain)

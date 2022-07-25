@@ -6,6 +6,7 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import com.example.moviesapp.BuildConfig
+import com.example.moviesapp.core.AuthStatus
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -13,7 +14,6 @@ import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.map
 
 object GoogleOneTapHandler {
     private const val TAG = "GoogleOneTapHandler"
@@ -27,13 +27,13 @@ object GoogleOneTapHandler {
         onTapClient: SignInClient,
     ): Flow<Int> {
 
-        return launchSignInRequest(
+        return launchOneTapRequest(
             oneTapClient = onTapClient,
             launcher = launcher
         )
     }
 
-    private suspend fun launchSignInRequest(
+    private suspend fun launchOneTapRequest(
         oneTapClient: SignInClient,
         launcher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>
     ) = callbackFlow {
@@ -47,10 +47,10 @@ object GoogleOneTapHandler {
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
                     .setServerClientId(BuildConfig.ONE_TAP_CLIENT_ID)
-                    .setFilterByAuthorizedAccounts(true)
+                    .setFilterByAuthorizedAccounts(false)
                     .build()
             )
-            .setAutoSelectEnabled(true)
+            .setAutoSelectEnabled(false)
             .build()
 
         oneTapClient.beginSignIn(signInRequest)
@@ -58,38 +58,7 @@ object GoogleOneTapHandler {
                 onSuccess(result, launcher)
             }
             .addOnFailureListener {
-                Log.d(TAG, "launchSignInRequest: No Sign Exit. Launching SignUp Request")
-                launchSignUpRequest(oneTapClient, launcher).map {
-                    trySend(it)
-                    this.close()
-                }
-            }
-        awaitClose {
-            channel.close()
-        }
-    }
-
-    private fun launchSignUpRequest(
-        oneTapClient: SignInClient,
-        launcher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>
-    ) = callbackFlow {
-        val signUpRequest = BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId(BuildConfig.ONE_TAP_CLIENT_ID)
-                    .setFilterByAuthorizedAccounts(false)
-                    .build()
-            ).build()
-
-        oneTapClient.beginSignIn(signUpRequest)
-            .addOnSuccessListener { result ->
-                onSuccess(result, launcher)
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "launchInSignUpRequest: Sign Up Failed", it)
-                trySend(FAILED)
-                close()
+                onFailure(it)
             }
         awaitClose {
             channel.close()
@@ -102,20 +71,23 @@ object GoogleOneTapHandler {
     ) {
         try {
             if (result == null) throw NullPointerException()
+            Log.d(TAG, "launchOneTapRequest: Google Request Successful")
             IntentSenderRequest.Builder(result.pendingIntent.intentSender).build().also {
                 launcher.launch(it)
             }
             close()
 
         } catch (intentError: IntentSender.SendIntentException) {
-            Log.d(TAG, "launchGoogleRequest: Intent Error", intentError)
-            trySend(FAILED)
-            close()
+            onFailure(intentError)
         } catch (resultError: NullPointerException) {
-            Log.d(TAG, "launchGoogleRequest: Null Pointer Exception")
-            trySend(FAILED)
-            close()
+            onFailure(resultError)
         }
+    }
+
+    private fun ProducerScope<Int>.onFailure(exception: Exception) {
+        Log.d(TAG, "launchOneTapRequest: ${exception.localizedMessage}")
+        trySend(FAILED)
+        close()
     }
 
 }

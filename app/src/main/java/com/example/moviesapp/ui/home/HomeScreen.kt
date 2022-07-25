@@ -1,9 +1,6 @@
 package com.example.moviesapp.ui.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moviesapp.R
 import com.example.moviesapp.ui.composablehelpers.ComposeConstants
@@ -47,11 +43,6 @@ private fun HomeScreen(
     var startAnim by remember { mutableStateOf(true) }
     var textInitialAlpha by remember { mutableStateOf(0f) }
     var steamInitialAlpha by remember { mutableStateOf(1f) }
-    val contentAnimStarter = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
-        }
-    }
 
     val framesAnimatable = remember {
         Animatable(
@@ -70,25 +61,24 @@ private fun HomeScreen(
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing),
     )
 
-    if (contentAnimStarter.isIdle && contentAnimStarter.currentState) {
-        LaunchedEffect(startAnim) {
-            delay(500)
-            if (startAnim) {
-                framesAnimatable.animateTo(
-                    targetValue = state.frameLength,
-                    animationSpec = tween(1300, easing = LinearEasing)
-                )
-            }
-            if (!framesAnimatable.isRunning) {
-                textInitialAlpha = 1f
-                steamInitialAlpha = 0f
+    LaunchedEffect(startAnim) {
+        delay(500)
+        if (startAnim) {
+            framesAnimatable.animateTo(
+                targetValue = state.frameLength,
+                animationSpec = tween(1300, easing = LinearEasing)
+            )
+        }
+        if (!framesAnimatable.isRunning) {
+            textInitialAlpha = 1f
+            steamInitialAlpha = 0f
 
-                delay(1000)
-                framesAnimatable.snapTo(0)
-                startAnim = false
-            }
+            delay(1000)
+            framesAnimatable.snapTo(0)
+            startAnim = false
         }
     }
+
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -104,34 +94,26 @@ private fun HomeScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            AnimatedVisibility(
-                visibleState = contentAnimStarter,
-                enter =
-                slideInHorizontally(animationSpec = tween(durationMillis = 1000), initialOffsetX = {
-                    with(density) { -100.dp.roundToPx() }
-                })
-                        + fadeIn(animationSpec = tween(durationMillis = 500, easing = LinearEasing))
-            ) {
-                Box(
-                    modifier = Modifier.clickable {
-                        if (!framesAnimatable.isRunning) {
-                            steamInitialAlpha = 1f
-                            startAnim = true
-                        }
+            Box(
+                modifier = Modifier.clickable {
+                    if (!framesAnimatable.isRunning) {
+                        steamInitialAlpha = 1f
+                        startAnim = true
                     }
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.cauldron),
-                        contentDescription = null
-                    )
-
-                    Image(
-                        modifier = Modifier.alpha(steamAnimatedAlpha),
-                        painter = painterResource(state.frames[framesAnimatable.value]),
-                        contentDescription = null
-                    )
                 }
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.cauldron),
+                    contentDescription = null
+                )
+
+                Image(
+                    modifier = Modifier.alpha(steamAnimatedAlpha),
+                    painter = painterResource(state.frames[framesAnimatable.value]),
+                    contentDescription = null
+                )
             }
+
             Spacer(modifier = Modifier.height(ComposeConstants.MEDIUM_SPACING))
 
             Text(

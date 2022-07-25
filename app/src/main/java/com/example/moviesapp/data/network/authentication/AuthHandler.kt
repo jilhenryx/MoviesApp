@@ -89,7 +89,7 @@ class AuthHandler @Inject constructor() {
 
         //SignOut if User already exist
         firebaseAuth.signOut()
-
+        Log.d(TAG, "loginWithGoogle: Initiated")
         try {
             firebaseAuth.signInWithCredential(googleCredential)
                 .addOnSuccessListener {

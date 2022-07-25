@@ -148,15 +148,13 @@ private fun LoginScreen(
                     },
                     onGoogleLoginCLicked = {
                         focusManager.clearFocus()
+                        state.isLoading = true
                         coroutineScope.launch {
                             GoogleOneTapHandler.loginWithGoogle(
                                 resultLauncher,
                                 oneTapClient
-                            ).collect {
-                                onGoogleSignIn("")
-                            }
+                            ).collect { onGoogleSignIn("") }
                         }
-
                     }
                 )
 
