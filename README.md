@@ -26,7 +26,7 @@ This project will use all recent Modern Android Developer practices, libraries a
 - To use the Google's One-Tap Functionality, set of a Google Console Project using this [guide](https://developers.google.com/identity/one-tap/android/get-started) and add your Web Application ClientID generated from your console project in [`gradle.properties`](https://github.com/jilhenryx/MoviesApp/blob/authentication/gradle.properties) replacing the empty `oneTapClientID` value.
 *Note this is your server's client ID, not your Android client ID.*
 
-[Back Up](https://github.com/jilhenryx/NotesApp#table-of-contents) :point_up_2:
+[Back Up](https://github.com/jilhenryx/MoviesApp#table-of-contents) :point_up_2:
 
 ## Current Technical Details
 - **Language:** Kotlin
@@ -36,7 +36,7 @@ This project will use all recent Modern Android Developer practices, libraries a
 - **Third Party Libraries:** Google's Accompanist Library for Animated Navigation, Firebase and Google Play Services for Authentication
 - **Kotlin Components:** Kotlin Coroutines and Flow
 
-[Back Up](https://github.com/jilhenryx/NotesApp#table-of-contents) :point_up_2:
+[Back Up](https://github.com/jilhenryx/MoviesApp#table-of-contents) :point_up_2:
 
 ## Project Samples
 ### Create Account Authentication Flow
