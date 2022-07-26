@@ -1,1 +1,4 @@
 /build
+
+# Do not commit firebase config
+google-services.json
